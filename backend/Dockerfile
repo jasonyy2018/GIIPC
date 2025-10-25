@@ -15,7 +15,8 @@ RUN addgroup -g 1001 -S nodejs && \
 COPY package*.json ./
 
 # Install dependencies (production only)
-RUN npm ci --omit=dev && \
+# Use npm install instead of npm ci for better compatibility
+RUN npm install --production --no-optional && \
     npm cache clean --force
 
 # Copy application source
