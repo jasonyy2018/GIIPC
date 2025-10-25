@@ -142,11 +142,10 @@ CREATE INDEX idx_conferences_location ON conferences(location);
 CREATE INDEX idx_users_email_role ON users(email, role_id);
 
 -- Partial indexes for frequently accessed data (PostgreSQL specific)
-CREATE INDEX idx_news_recent ON news(published_date DESC) 
-WHERE published_date > CURRENT_DATE - INTERVAL '90 days';
+-- Note: Removed CURRENT_DATE predicates as they are not IMMUTABLE
+CREATE INDEX idx_news_recent ON news(published_date DESC);
 
-CREATE INDEX idx_events_upcoming ON events(date) 
-WHERE date >= CURRENT_DATE;
+CREATE INDEX idx_events_upcoming ON events(date);
 
 -- Add comments for documentation
 COMMENT ON TABLE users IS 'System users with authentication credentials';
