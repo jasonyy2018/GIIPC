@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conference Form Update Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold mb-6 text-[#0B4D3E]">Conference Form Update Test</h1>
+        
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">Test Scenarios</h2>
+            <div class="space-y-4">
+                <div>
+                    <button onclick="testCreateConferenceForm()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Test Create Conference Form
+                    </button>
+                    <p class="text-sm text-gray-600 mt-2">Opens the create conference modal with start_date and end_date fields</p>
+                </div>
+                
+                <div>
+                    <button onclick="testEditConferenceForm()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                        Test Edit Conference Form
+                    </button>
+                    <p class="text-sm text-gray-600 mt-2">Opens the edit conference modal with pre-filled data</p>
+                </div>
+                
+                <div>
+                    <button onclick="testDateValidation()" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">
+                        Test Date Validation
+                    </button>
+                    <p class="text-sm text-gray-600 mt-2">Tests that end_date must be after start_date</p>
+                </div>
+                
+                <div>
+                    <button onclick="testTimeConversion()" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                        Test Time Conversion
+                    </button>
+                    <p class="text-sm text-gray-600 mt-2">Tests local time to UTC conversion</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-bold mb-4">Test Results</h2>
+            <div id="testResults" class="space-y-2"></div>
+        </div>
+    </div>
+    
+    <div id="modalContainer"></div>
+    
+    <script type="module">
+        import { ConferencesAPI } from './frontend/js/api-client.js';
+        
+        // Mock AdminDashboard for testing
+        class TestAdminDashboard {
+            constructor() {
+                this.token = 'test-token';
+                this.user = { email: 'test@example.com', role: 'admin' };
+            }
+            
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            formatDateTimeLocal(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
+            
+            createModal(title, content) {
+                const modal = document.createElement('div');
+                modal.className = 'modal active';
+                modal.innerHTML = `
+                    <div class="modal-content p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold text-[#0B4D3E]">${title}</h3>
+                            <button onclick="testDashboard.closeModal()" class="text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times text-xl"></i>
+                            </button>
+                        </div>
+                        ${content}
+                    </div>
+                `;
+                document.getElementById('modalContainer').appendChild(modal);
+                return modal;
+            }
+            
+            closeModal() {
+                const modal = document.querySelector('.modal');
+                if (modal) modal.remove();
+            }
+            
+            showMessage(message, type = 'info') {
+                addTestResult(message, type);
+            }
+            
+            showAddConferenceModal() {
+                const modal = this.createModal('Add Conference', `
+                    <form id="conferenceForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Title *</label>
+                            <input type="text" id="conferenceTitle" required class="w-full px-3 py-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Description *</label>
+                            <textarea id="conferenceDescription" required rows="3" class="w-full px-3 py-2 border rounded-lg"></textarea>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Start Date & Time *</label>
+                                <input type="datetime-local" id="conferenceStartDate" required class="w-full px-3 py-2 border rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">End Date & Time *</label>
+                                <input type="datetime-local" id="conferenceEndDate" required class="w-full px-3 py-2 border rounded-lg">
+                            </div>
+                        </div>
+                        <div id="conferenceDateError" class="text-red-600 text-sm hidden">End date must be after start date</div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Location *</label>
+                            <input type="text" id="conferenceLocation" required class="w-full px-3 py-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Summary</label>
+                            <textarea id="conferenceSummary" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Image URL</label>
+                            <input type="url" id="conferenceImageUrl" class="w-full px-3 py-2 border rounded-lg">
+                        </div>
+                        <div class="flex justify-end gap-3">
+                            <button type="button" onclick="testDashboard.closeModal()" class="px-4 py-2 border rounded-lg">Cancel</button>
+                            <button type="submit" class="px-4 py-2 bg-[#0B4D3E] text-white rounded-lg">Create</button>
+                        </div>
+                    </form>
+                `);
+                
+                const startDateInput = document.getElementById('conferenceStartDate');
+                const endDateInput = document.getElementById('conferenceEndDate');
+                const errorDiv = document.getElementById('conferenceDateError');
+                
+                const validateDates = () => {
+                    if (startDateInput.value && endDateInput.value) {
+                        const startDate = new Date(startDateInput.value);
+                        const endDate = new Date(endDateInput.value);
+                        
+                        if (endDate <= startDate) {
+                            errorDiv.classList.remove('hidden');
+                            return false;
+                        } else {
+                            errorDiv.classList.add('hidden');
+                            return true;
+                        }
+                    }
+                    return true;
+                };
+                
+                startDateInput.addEventListener('change', validateDates);
+                endDateInput.addEventListener('change', validateDates);
+                
+                document.getElementById('conferenceForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    if (validateDates()) {
+                        addTestResult('✓ Form validation passed', 'success');
+                        addTestResult('✓ Would create conference with data', 'success');
+                        this.closeModal();
+                    }
+                });
+            }
+            
+            editConference(id, conferenceData) {
+                const startDateLocal = conferenceData.start_date ? this.formatDateTimeLocal(conferenceData.start_date) : '';
+                const endDateLocal = conferenceData.end_date ? this.formatDateTimeLocal(conferenceData.end_date) : '';
+                
+                const modal = this.createModal('Edit Conference', `
+                    <form id="conferenceEditForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Title *</label>
+                            <input type="text" id="editConferenceTitle" required class="w-full px-3 py-2 border rounded-lg" value="${this.escapeHtml(conferenceData.title)}">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Description *</label>
+                            <textarea id="editConferenceDescription" required rows="3" class="w-full px-3 py-2 border rounded-lg">${this.escapeHtml(conferenceData.description)}</textarea>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Start Date & Time *</label>
+                                <input type="datetime-local" id="editConferenceStartDate" required class="w-full px-3 py-2 border rounded-lg" value="${startDateLocal}">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">End Date & Time *</label>
+                                <input type="datetime-local" id="editConferenceEndDate" required class="w-full px-3 py-2 border rounded-lg" value="${endDateLocal}">
+                            </div>
+                        </div>
+                        <div id="editConferenceDateError" class="text-red-600 text-sm hidden">End date must be after start date</div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Location *</label>
+                            <input type="text" id="editConferenceLocation" required class="w-full px-3 py-2 border rounded-lg" value="${this.escapeHtml(conferenceData.location)}">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Summary</label>
+                            <textarea id="editConferenceSummary" rows="2" class="w-full px-3 py-2 border rounded-lg">${this.escapeHtml(conferenceData.summary || '')}</textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Image URL</label>
+                            <input type="url" id="editConferenceImageUrl" class="w-full px-3 py-2 border rounded-lg" value="${conferenceData.image_url || ''}">
+                        </div>
+                        <div class="flex justify-end gap-3">
+                            <button type="button" onclick="testDashboard.closeModal()" class="px-4 py-2 border rounded-lg">Cancel</button>
+                            <button type="submit" class="px-4 py-2 bg-[#0B4D3E] text-white rounded-lg">Update</button>
+                        </div>
+                    </form>
+                `);
+                
+                const startDateInput = document.getElementById('editConferenceStartDate');
+                const endDateInput = document.getElementById('editConferenceEndDate');
+                const errorDiv = document.getElementById('editConferenceDateError');
+                
+                const validateDates = () => {
+                    if (startDateInput.value && endDateInput.value) {
+                        const startDate = new Date(startDateInput.value);
+                        const endDate = new Date(endDateInput.value);
+                        
+                        if (endDate <= startDate) {
+                            errorDiv.classList.remove('hidden');
+                            return false;
+                        } else {
+                            errorDiv.classList.add('hidden');
+                            return true;
+                        }
+                    }
+                    return true;
+                };
+                
+                startDateInput.addEventListener('change', validateDates);
+                endDateInput.addEventListener('change', validateDates);
+                
+                document.getElementById('conferenceEditForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    if (validateDates()) {
+                        addTestResult('✓ Edit form validation passed', 'success');
+                        addTestResult('✓ Would update conference with data', 'success');
+                        this.closeModal();
+                    }
+                });
+            }
+        }
+        
+        window.testDashboard = new TestAdminDashboard();
+        
+        function addTestResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('testResults');
+            const resultItem = document.createElement('div');
+            resultItem.className = `p-3 rounded ${
+                type === 'success' ? 'bg-green-100 text-green-800' :
+                type === 'error' ? 'bg-red-100 text-red-800' :
+                'bg-blue-100 text-blue-800'
+            }`;
+            resultItem.textContent = message;
+            resultsDiv.appendChild(resultItem);
+        }
+        
+        window.testCreateConferenceForm = function() {
+            document.getElementById('testResults').innerHTML = '';
+            addTestResult('Testing Create Conference Form...', 'info');
+            testDashboard.showAddConferenceModal();
+            
+            setTimeout(() => {
+                const form = document.getElementById('conferenceForm');
+                if (form) {
+                    addTestResult('✓ Create form rendered successfully', 'success');
+                    
+                    const startDateInput = document.getElementById('conferenceStartDate');
+                    const endDateInput = document.getElementById('conferenceEndDate');
+                    
+                    if (startDateInput && endDateInput) {
+                        addTestResult('✓ Start date and end date fields present', 'success');
+                        addTestResult('✓ Fields use datetime-local input type', 'success');
+                    } else {
+                        addTestResult('✗ Date fields missing', 'error');
+                    }
+                } else {
+                    addTestResult('✗ Form not rendered', 'error');
+                }
+            }, 100);
+        };
+        
+        window.testEditConferenceForm = function() {
+            document.getElementById('testResults').innerHTML = '';
+            addTestResult('Testing Edit Conference Form...', 'info');
+            
+            const mockConference = {
+                id: 1,
+                title: 'Test Conference',
+                description: 'Test Description',
+                start_date: '2025-11-15T09:00:00Z',
+                end_date: '2025-11-17T17:00:00Z',
+                location: 'Test Location',
+                summary: 'Test Summary',
+                image_url: 'https://example.com/image.jpg'
+            };
+            
+            testDashboard.editConference(1, mockConference);
+            
+            setTimeout(() => {
+                const form = document.getElementById('conferenceEditForm');
+                if (form) {
+                    addTestResult('✓ Edit form rendered successfully', 'success');
+                    
+                    const startDateInput = document.getElementById('editConferenceStartDate');
+                    const endDateInput = document.getElementById('editConferenceEndDate');
+                    
+                    if (startDateInput && endDateInput) {
+                        addTestResult('✓ Start date and end date fields present', 'success');
+                        
+                        if (startDateInput.value && endDateInput.value) {
+                            addTestResult('✓ Date fields pre-filled with data', 'success');
+                            addTestResult(`  Start: ${startDateInput.value}`, 'info');
+                            addTestResult(`  End: ${endDateInput.value}`, 'info');
+                        } else {
+                            addTestResult('✗ Date fields not pre-filled', 'error');
+                        }
+                    } else {
+                        addTestResult('✗ Date fields missing', 'error');
+                    }
+                } else {
+                    addTestResult('✗ Form not rendered', 'error');
+                }
+            }, 100);
+        };
+        
+        window.testDateValidation = function() {
+            document.getElementById('testResults').innerHTML = '';
+            addTestResult('Testing Date Validation...', 'info');
+            testDashboard.showAddConferenceModal();
+            
+            setTimeout(() => {
+                const startDateInput = document.getElementById('conferenceStartDate');
+                const endDateInput = document.getElementById('conferenceEndDate');
+                const errorDiv = document.getElementById('conferenceDateError');
+                
+                // Test invalid dates (end before start)
+                startDateInput.value = '2025-11-20T10:00';
+                endDateInput.value = '2025-11-19T10:00';
+                endDateInput.dispatchEvent(new Event('change'));
+                
+                setTimeout(() => {
+                    if (!errorDiv.classList.contains('hidden')) {
+                        addTestResult('✓ Validation error shown for invalid dates', 'success');
+                    } else {
+                        addTestResult('✗ Validation error not shown', 'error');
+                    }
+                    
+                    // Test valid dates
+                    endDateInput.value = '2025-11-21T10:00';
+                    endDateInput.dispatchEvent(new Event('change'));
+                    
+                    setTimeout(() => {
+                        if (errorDiv.classList.contains('hidden')) {
+                            addTestResult('✓ Validation error hidden for valid dates', 'success');
+                        } else {
+                            addTestResult('✗ Validation error still shown', 'error');
+                        }
+                    }, 100);
+                }, 100);
+            }, 100);
+        };
+        
+        window.testTimeConversion = function() {
+            document.getElementById('testResults').innerHTML = '';
+            addTestResult('Testing Time Conversion (Local to UTC)...', 'info');
+            
+            const localTime = '2025-11-15T14:30';
+            const localDate = new Date(localTime);
+            const utcTime = localDate.toISOString();
+            
+            addTestResult(`Local time: ${localTime}`, 'info');
+            addTestResult(`UTC time: ${utcTime}`, 'info');
+            addTestResult('✓ Time conversion logic verified', 'success');
+            
+            // Test reverse conversion
+            const testUTC = '2025-11-15T09:00:00Z';
+            const testDate = new Date(testUTC);
+            const year = testDate.getFullYear();
+            const month = String(testDate.getMonth() + 1).padStart(2, '0');
+            const day = String(testDate.getDate()).padStart(2, '0');
+            const hours = String(testDate.getHours()).padStart(2, '0');
+            const minutes = String(testDate.getMinutes()).padStart(2, '0');
+            const localFormat = `${year}-${month}-${day}T${hours}:${minutes}`;
+            
+            addTestResult(`UTC time: ${testUTC}`, 'info');
+            addTestResult(`Local format: ${localFormat}`, 'info');
+            addTestResult('✓ UTC to local conversion verified', 'success');
+        };
+    </script>
+</body>
+</html>

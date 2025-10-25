@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Menu Typography Test - GIIP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/typography.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0B4D3E',
+                        'primary': '#1B5E20',
+                        'accent': '#E63946',
+                    },
+                    fontFamily: {
+                        'sans': ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .nav-links { transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .test-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 200;
+            max-width: 300px;
+        }
+        .test-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #0B4D3E;
+        }
+        .test-info ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 13px;
+        }
+        .test-info li {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .test-info li:last-child {
+            border-bottom: none;
+        }
+        .pass { color: #4caf50; }
+        .fail { color: #f44336; }
+    </style>
+</head>
+<body class="font-sans bg-gray-100">
+    
+    <!-- Test Info Panel -->
+    <div class="test-info">
+        <h3>移动端菜单测试</h3>
+        <ul id="test-results">
+            <li>加载中...</li>
+        </ul>
+        <button onclick="openMenu()" class="mt-3 bg-primary text-white px-4 py-2 rounded text-sm w-full">
+            打开菜单
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-primary-dark sticky top-0 z-[100] shadow-lg">
+        <div class="container mx-auto px-5 max-w-[1200px]">
+            <nav class="flex justify-between items-center py-[15px]">
+                <div class="flex items-center">
+                    <div class="text-white text-[22px] font-bold tracking-wide">GIIP 测试</div>
+                </div>
+                <button class="mobile-menu-btn md:hidden bg-transparent border-none text-white text-2xl cursor-pointer px-2.5 py-1.5 z-[110]"
+                    onclick="openMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="menu-overlay fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-[104] opacity-0 invisible transition-all duration-300"
+        onclick="closeMenu()"></div>
+
+    <!-- Mobile Navigation Drawer -->
+    <nav id="mobile-nav-drawer"
+        class="nav-links md:hidden fixed top-0 -left-full w-[85%] max-w-[320px] h-screen bg-primary-dark flex-col pt-20 px-[25px] pb-[30px] shadow-[2px_0_15px_rgba(0,0,0,0.2)] z-[105]">
+        <ul class="list-none">
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#home" class="text-white no-underline text-base py-[10px] px-[12px] block leading-[1.4]">Home</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#news" class="text-white no-underline text-base py-[10px] px-[12px] block leading-[1.4]">News</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#events" class="text-white no-underline text-base py-[10px] px-[12px] block leading-[1.4]">Events</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#conferences" class="text-white no-underline text-base py-[10px] px-[12px] block leading-[1.4]">Conferences</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#highlights" class="text-white no-underline text-base py-[10px] px-[12px] block leading-[1.4]">Highlights</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#about" class="text-white no-underline text-base py-[10px] px-[12px] block leading-[1.4]">About</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#contact" class="text-white no-underline text-base py-[10px] px-[12px] block leading-[1.4]">Contact</a>
+            </li>
+        </ul>
+        <div class="auth-links-mobile mt-6 pt-6 border-t border-white/10">
+            <a href="#login" class="text-white no-underline text-base py-3 px-3 block mb-3 border border-white/30 rounded-md text-center">Login</a>
+            <a href="#register" class="bg-accent text-white no-underline text-base py-3 px-3 block rounded-md text-center">Register</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="py-20">
+        <div class="container mx-auto px-5 max-w-[1200px]">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h1 class="text-3xl font-bold text-primary-dark mb-6">移动端菜单行间距测试</h1>
+                
+                <div class="space-y-4">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
+                        <h3 class="font-semibold text-blue-900 mb-2">测试说明</h3>
+                        <p class="text-blue-800 text-sm">点击右上角的"打开菜单"按钮或使用移动设备查看菜单效果。</p>
+                    </div>
+
+                    <div class="bg-green-50 border-l-4 border-green-500 p-4">
+                        <h3 class="font-semibold text-green-900 mb-2">预期效果</h3>
+                        <ul class="text-green-800 text-sm space-y-1 list-disc pl-5">
+                            <li>菜单项之间的间距：12px (mb-[12px])</li>
+                            <li>链接内边距：上下 10px，左右 12px</li>
+                            <li>行高：1.4 (leading-[1.4])</li>
+                            <li>字体大小：16px (text-base)</li>
+                            <li>容器内边距：左右 25px，上 80px，下 30px</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4">
+                        <h3 class="font-semibold text-yellow-900 mb-2">检查项目</h3>
+                        <ul class="text-yellow-800 text-sm space-y-1 list-disc pl-5">
+                            <li>菜单项之间的垂直间距是否紧凑</li>
+                            <li>文字行高是否合适（不会太松散）</li>
+                            <li>点击区域是否足够大（至少 44x44px）</li>
+                            <li>视觉层次是否清晰</li>
+                        </ul>
+                    </div>
+
+                    <div id="measurements" class="bg-gray-50 border-l-4 border-gray-500 p-4">
+                        <h3 class="font-semibold text-gray-900 mb-2">实际测量值</h3>
+                        <div id="measurement-results" class="text-gray-800 text-sm">
+                            <p>打开菜单后将显示实际测量值...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function openMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const overlay = document.querySelector('.menu-overlay');
+            navLinks.classList.add('active');
+            navLinks.style.left = '0';
+            overlay.classList.add('active');
+            overlay.style.opacity = '1';
+            overlay.style.visibility = 'visible';
+            
+            // 延迟测量以确保菜单完全打开
+            setTimeout(measureMenu, 500);
+        }
+
+        function closeMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const overlay = document.querySelector('.menu-overlay');
+            navLinks.classList.remove('active');
+            navLinks.style.left = '-100%';
+            overlay.classList.remove('active');
+            overlay.style.opacity = '0';
+            overlay.style.visibility = 'hidden';
+        }
+
+        function measureMenu() {
+            const nav = document.getElementById('mobile-nav-drawer');
+            const ul = nav.querySelector('ul');
+            const lis = ul.querySelectorAll('li');
+            const firstLink = lis[0].querySelector('a');
+            
+            const navStyles = window.getComputedStyle(nav);
+            const liStyles = window.getComputedStyle(lis[0]);
+            const linkStyles = window.getComputedStyle(firstLink);
+            
+            const measurements = {
+                '容器左右内边距': navStyles.paddingLeft,
+                '容器上内边距': navStyles.paddingTop,
+                '容器下内边距': navStyles.paddingBottom,
+                'li 下边距': liStyles.marginBottom,
+                '链接上内边距': linkStyles.paddingTop,
+                '链接下内边距': linkStyles.paddingBottom,
+                '链接左内边距': linkStyles.paddingLeft,
+                '链接右内边距': linkStyles.paddingRight,
+                '链接行高': linkStyles.lineHeight,
+                '链接字体大小': linkStyles.fontSize,
+                '链接高度': firstLink.offsetHeight + 'px'
+            };
+            
+            let html = '<ul class="space-y-1">';
+            for (const [key, value] of Object.entries(measurements)) {
+                html += `<li><strong>${key}:</strong> ${value}</li>`;
+            }
+            html += '</ul>';
+            
+            document.getElementById('measurement-results').innerHTML = html;
+        }
+
+        function runTests() {
+            const nav = document.getElementById('mobile-nav-drawer');
+            const ul = nav.querySelector('ul');
+            const lis = ul.querySelectorAll('li');
+            const firstLink = lis[0].querySelector('a');
+            
+            const navStyles = window.getComputedStyle(nav);
+            const liStyles = window.getComputedStyle(lis[0]);
+            const linkStyles = window.getComputedStyle(firstLink);
+            
+            const tests = [
+                {
+                    name: '容器左右内边距 = 25px',
+                    pass: navStyles.paddingLeft === '25px' && navStyles.paddingRight === '25px'
+                },
+                {
+                    name: 'li 下边距 = 12px',
+                    pass: liStyles.marginBottom === '12px'
+                },
+                {
+                    name: '链接上下内边距 = 10px',
+                    pass: linkStyles.paddingTop === '10px' && linkStyles.paddingBottom === '10px'
+                },
+                {
+                    name: '链接左右内边距 = 12px',
+                    pass: linkStyles.paddingLeft === '12px' && linkStyles.paddingRight === '12px'
+                },
+                {
+                    name: '链接行高 = 1.4',
+                    pass: parseFloat(linkStyles.lineHeight) / parseFloat(linkStyles.fontSize) >= 1.35 && 
+                          parseFloat(linkStyles.lineHeight) / parseFloat(linkStyles.fontSize) <= 1.45
+                },
+                {
+                    name: '链接字体大小 = 16px',
+                    pass: linkStyles.fontSize === '16px'
+                }
+            ];
+            
+            let html = '';
+            tests.forEach(test => {
+                const icon = test.pass ? '✓' : '✗';
+                const className = test.pass ? 'pass' : 'fail';
+                html += `<li class="${className}">${icon} ${test.name}</li>`;
+            });
+            
+            document.getElementById('test-results').innerHTML = html;
+        }
+
+        // 页面加载后运行测试
+        window.addEventListener('load', runTests);
+    </script>
+</body>
+</html>

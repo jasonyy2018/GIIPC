@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Integration Test - GIIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">API Integration Test</h1>
+        
+        <!-- Test Results -->
+        <div class="space-y-4">
+            <!-- News Test -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-3 text-gray-700">News API Test</h2>
+                <button onclick="testNewsAPI()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Test News API
+                </button>
+                <div id="news-result" class="mt-4 p-4 bg-gray-50 rounded hidden"></div>
+            </div>
+
+            <!-- Events Test -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-3 text-gray-700">Events API Test</h2>
+                <button onclick="testEventsAPI()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    Test Events API
+                </button>
+                <div id="events-result" class="mt-4 p-4 bg-gray-50 rounded hidden"></div>
+            </div>
+
+            <!-- Conferences Test -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-3 text-gray-700">Conferences API Test</h2>
+                <button onclick="testConferencesAPI()" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+                    Test Conferences API
+                </button>
+                <div id="conferences-result" class="mt-4 p-4 bg-gray-50 rounded hidden"></div>
+            </div>
+
+            <!-- Token Test -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-3 text-gray-700">Token Management Test</h2>
+                <div class="space-x-2">
+                    <button onclick="testSetToken()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+                        Set Test Token
+                    </button>
+                    <button onclick="testGetToken()" class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600">
+                        Get Token
+                    </button>
+                    <button onclick="testRemoveToken()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                        Remove Token
+                    </button>
+                </div>
+                <div id="token-result" class="mt-4 p-4 bg-gray-50 rounded hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include API Client -->
+    <script src="js/api-client.js"></script>
+
+    <script>
+        // Test News API
+        async function testNewsAPI() {
+            const resultDiv = document.getElementById('news-result');
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerHTML = '<p class="text-gray-600">Loading...</p>';
+            
+            try {
+                const news = await NewsAPI.getAll();
+                resultDiv.innerHTML = `
+                    <p class="text-green-600 font-semibold mb-2">✓ Success!</p>
+                    <p class="text-gray-700">Fetched ${news.length} news items</p>
+                    <pre class="mt-2 text-xs overflow-auto">${JSON.stringify(news, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <p class="text-red-600 font-semibold mb-2">✗ Error!</p>
+                    <p class="text-gray-700">${error.message}</p>
+                    <pre class="mt-2 text-xs">${JSON.stringify(error, null, 2)}</pre>
+                `;
+            }
+        }
+
+        // Test Events API
+        async function testEventsAPI() {
+            const resultDiv = document.getElementById('events-result');
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerHTML = '<p class="text-gray-600">Loading...</p>';
+            
+            try {
+                const events = await EventsAPI.getAll();
+                resultDiv.innerHTML = `
+                    <p class="text-green-600 font-semibold mb-2">✓ Success!</p>
+                    <p class="text-gray-700">Fetched ${events.length} events</p>
+                    <pre class="mt-2 text-xs overflow-auto">${JSON.stringify(events, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <p class="text-red-600 font-semibold mb-2">✗ Error!</p>
+                    <p class="text-gray-700">${error.message}</p>
+                    <pre class="mt-2 text-xs">${JSON.stringify(error, null, 2)}</pre>
+                `;
+            }
+        }
+
+        // Test Conferences API
+        async function testConferencesAPI() {
+            const resultDiv = document.getElementById('conferences-result');
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerHTML = '<p class="text-gray-600">Loading...</p>';
+            
+            try {
+                const conferences = await ConferencesAPI.getAll();
+                resultDiv.innerHTML = `
+                    <p class="text-green-600 font-semibold mb-2">✓ Success!</p>
+                    <p class="text-gray-700">Fetched ${conferences.length} conferences</p>
+                    <pre class="mt-2 text-xs overflow-auto">${JSON.stringify(conferences, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <p class="text-red-600 font-semibold mb-2">✗ Error!</p>
+                    <p class="text-gray-700">${error.message}</p>
+                    <pre class="mt-2 text-xs">${JSON.stringify(error, null, 2)}</pre>
+                `;
+            }
+        }
+
+        // Test Set Token
+        function testSetToken() {
+            const resultDiv = document.getElementById('token-result');
+            resultDiv.classList.remove('hidden');
+            
+            const testToken = 'test_jwt_token_' + Date.now();
+            TokenManager.setToken(testToken);
+            
+            resultDiv.innerHTML = `
+                <p class="text-green-600 font-semibold mb-2">✓ Token Set!</p>
+                <p class="text-gray-700">Token: ${testToken}</p>
+            `;
+        }
+
+        // Test Get Token
+        function testGetToken() {
+            const resultDiv = document.getElementById('token-result');
+            resultDiv.classList.remove('hidden');
+            
+            const token = TokenManager.getToken();
+            
+            if (token) {
+                resultDiv.innerHTML = `
+                    <p class="text-green-600 font-semibold mb-2">✓ Token Found!</p>
+                    <p class="text-gray-700">Token: ${token}</p>
+                    <p class="text-gray-600 mt-2">Authenticated: ${TokenManager.isAuthenticated()}</p>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <p class="text-yellow-600 font-semibold mb-2">⚠ No Token!</p>
+                    <p class="text-gray-700">No token found in localStorage</p>
+                `;
+            }
+        }
+
+        // Test Remove Token
+        function testRemoveToken() {
+            const resultDiv = document.getElementById('token-result');
+            resultDiv.classList.remove('hidden');
+            
+            TokenManager.removeToken();
+            
+            resultDiv.innerHTML = `
+                <p class="text-green-600 font-semibold mb-2">✓ Token Removed!</p>
+                <p class="text-gray-700">Token has been removed from localStorage</p>
+            `;
+        }
+    </script>
+</body>
+</html>

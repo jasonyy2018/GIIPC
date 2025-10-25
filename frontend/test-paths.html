@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Path Test - GIIP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0B4D3E;
+        }
+        h2 {
+            color: #1B5E20;
+            border-bottom: 2px solid #E63946;
+            padding-bottom: 10px;
+        }
+        .success {
+            color: #4caf50;
+            font-weight: bold;
+        }
+        .error {
+            color: #f44336;
+            font-weight: bold;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid #2196f3;
+            margin: 10px 0;
+        }
+        img {
+            max-width: 200px;
+            border: 2px solid #ddd;
+            padding: 10px;
+            background: white;
+        }
+        a {
+            color: #1B5E20;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: #C8E6C9;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 5px;
+        }
+        a:hover {
+            background: #E63946;
+            color: white;
+        }
+        .path-info {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 GIIP 路径测试页面</h1>
+    
+    <div class="info">
+        <strong>当前页面位置:</strong> <span id="current-url"></span><br>
+        <strong>基础路径:</strong> <span id="base-url"></span>
+    </div>
+
+    <div class="test-section">
+        <h2>1. Logo 图片测试</h2>
+        <p>测试 logo 是否能正确加载：</p>
+        
+        <h3>方法 1: 相对路径 (images/giip-logo.png)</h3>
+        <img src="images/giip-logo.png" alt="Logo Test 1" onerror="this.style.border='3px solid red'; this.alt='❌ 加载失败';" onload="this.style.border='3px solid green';">
+        <p class="path-info">路径: images/giip-logo.png</p>
+        
+        <h3>方法 2: 绝对路径 (/images/giip-logo.png)</h3>
+        <img src="/images/giip-logo.png" alt="Logo Test 2" onerror="this.style.border='3px solid red'; this.alt='❌ 加载失败';" onload="this.style.border='3px solid green';">
+        <p class="path-info">路径: /images/giip-logo.png</p>
+        
+        <h3>方法 3: 完整路径 (./images/giip-logo.png)</h3>
+        <img src="./images/giip-logo.png" alt="Logo Test 3" onerror="this.style.border='3px solid red'; this.alt='❌ 加载失败';" onload="this.style.border='3px solid green';">
+        <p class="path-info">路径: ./images/giip-logo.png</p>
+    </div>
+
+    <div class="test-section">
+        <h2>2. 页面链接测试</h2>
+        <p>点击以下链接测试页面是否存在：</p>
+        
+        <div>
+            <a href="index.html" target="_blank">index.html</a>
+            <a href="about.html" target="_blank">about.html</a>
+            <a href="contact.html" target="_blank">contact.html</a>
+            <a href="admin.html" target="_blank">admin.html</a>
+        </div>
+        
+        <h3>绝对路径测试</h3>
+        <div>
+            <a href="/index.html" target="_blank">/index.html</a>
+            <a href="/about.html" target="_blank">/about.html</a>
+            <a href="/contact.html" target="_blank">/contact.html</a>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. 文件存在性检查</h2>
+        <p>使用 JavaScript 检查文件是否可访问：</p>
+        <div id="file-check-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. 当前环境信息</h2>
+        <div id="env-info"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. 解决方案</h2>
+        <div class="info">
+            <h3>如果 Logo 不显示：</h3>
+            <ul>
+                <li>检查哪个图片路径显示为绿色边框</li>
+                <li>使用成功的路径格式更新所有页面</li>
+                <li>确保从 frontend 目录打开页面</li>
+            </ul>
+            
+            <h3>如果页面链接 404：</h3>
+            <ul>
+                <li>确保从 <code>frontend/index.html</code> 打开</li>
+                <li>不要从根目录打开</li>
+                <li>使用本地服务器: <code>python -m http.server 8000</code></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 显示当前 URL
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('base-url').textContent = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+
+        // 检查文件是否存在
+        const filesToCheck = [
+            'images/giip-logo.png',
+            'about.html',
+            'contact.html',
+            'index.html',
+            'css/typography.css',
+            'css/auth.css',
+            'js/common.js'
+        ];
+
+        const resultsDiv = document.getElementById('file-check-results');
+        
+        filesToCheck.forEach(file => {
+            fetch(file, { method: 'HEAD' })
+                .then(response => {
+                    const status = response.ok ? 
+                        `<span class="success">✓ 存在 (${response.status})</span>` : 
+                        `<span class="error">✗ 不存在 (${response.status})</span>`;
+                    resultsDiv.innerHTML += `<p><strong>${file}</strong>: ${status}</p>`;
+                })
+                .catch(error => {
+                    resultsDiv.innerHTML += `<p><strong>${file}</strong>: <span class="error">✗ 错误 (${error.message})</span></p>`;
+                });
+        });
+
+        // 显示环境信息
+        const envInfo = document.getElementById('env-info');
+        envInfo.innerHTML = `
+            <p><strong>User Agent:</strong> ${navigator.userAgent}</p>
+            <p><strong>Protocol:</strong> ${window.location.protocol}</p>
+            <p><strong>Host:</strong> ${window.location.host}</p>
+            <p><strong>Pathname:</strong> ${window.location.pathname}</p>
+            <p><strong>是否使用文件协议:</strong> ${window.location.protocol === 'file:' ? '是 (直接打开文件)' : '否 (使用服务器)'}</p>
+        `;
+    </script>
+</body>
+</html>

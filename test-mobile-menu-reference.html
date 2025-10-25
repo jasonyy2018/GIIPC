@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Menu Test - GIIP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #424242;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: #0B4D3E;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #E63946;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 10px;
+            z-index: 110;
+        }
+
+        /* Mobile Menu Overlay */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 104;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Content */
+        .content {
+            padding: 60px 20px;
+            min-height: 100vh;
+        }
+
+        .test-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-section h2 {
+            color: #0B4D3E;
+            margin-bottom: 15px;
+        }
+
+        .test-section p {
+            margin-bottom: 10px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .status.success {
+            background-color: #C8E6C9;
+            color: #1B5E20;
+        }
+
+        .status.info {
+            background-color: #E3F2FD;
+            color: #1976D2;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+                font-size: 16px;
+                line-height: 1.6;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 85%;
+                max-width: 320px;
+                height: 100vh;
+                background-color: #0B4D3E;
+                flex-direction: column;
+                padding: 80px 25px 30px;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+                z-index: 105;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links li {
+                margin: 0 0 12px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .nav-links li:last-child {
+                border-bottom: none;
+            }
+
+            .nav-links a {
+                font-size: 16px;
+                padding: 10px 12px;
+                line-height: 1.4;
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <div class="logo-text">GIIP</div>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#news">News</a></li>
+                    <li><a href="#events">Events</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Menu Overlay -->
+    <div class="menu-overlay"></div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="container">
+            <div class="test-section">
+                <h2>✅ Mobile Menu Implementation Test</h2>
+                <p><span class="status success">IMPLEMENTED</span> Mobile menu from reference HTML</p>
+                <p><strong>Features:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>✓ Slide-in animation from left</li>
+                    <li>✓ Dark overlay background</li>
+                    <li>✓ Smooth cubic-bezier transition</li>
+                    <li>✓ Click overlay to close</li>
+                    <li>✓ Click menu item to close</li>
+                    <li>✓ Body scroll lock when open</li>
+                    <li>✓ Responsive typography (16px base)</li>
+                </ul>
+            </div>
+
+            <div class="test-section">
+                <h2>📱 Testing Instructions</h2>
+                <p><span class="status info">RESIZE</span> Resize your browser to mobile width (≤768px) or use DevTools</p>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Click the hamburger menu button (☰) in the header</li>
+                    <li>Menu should slide in from the left</li>
+                    <li>Dark overlay should appear</li>
+                    <li>Click the overlay to close the menu</li>
+                    <li>Open menu again and click a menu item to close</li>
+                    <li>Verify smooth animations</li>
+                </ol>
+            </div>
+
+            <div class="test-section">
+                <h2>🎨 Typography Standards</h2>
+                <p><strong>Mobile Font Specifications (Archibucks-inspired):</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Base font size: 16px</li>
+                    <li>Line height: 1.6</li>
+                    <li>Font family: System fonts (-apple-system, BlinkMacSystemFont, etc.)</li>
+                    <li>Menu items: 16px, line-height 1.4</li>
+                    <li>Letter spacing: 0.034em for menu items</li>
+                </ul>
+            </div>
+
+            <div class="test-section">
+                <h2>🔧 Implementation Details</h2>
+                <p><strong>Files Updated:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><code>frontend/js/common.js</code> - Mobile menu JavaScript</li>
+                    <li><code>frontend/index.html</code> - CSS active states</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>Key Changes:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Uses <code>.active</code> class instead of Tailwind utilities</li>
+                    <li>Targets <code>#mobile-nav-drawer</code> specifically</li>
+                    <li>Smooth cubic-bezier(0.4, 0, 0.2, 1) transition</li>
+                    <li>85% width with 320px max-width</li>
+                    <li>Proper z-index layering (105 for menu, 104 for overlay)</li>
+                </ul>
+            </div>
+
+            <div class="test-section">
+                <h2>📋 Checklist</h2>
+                <p>Verify the following on mobile:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>☐ Menu button visible on mobile (≤768px)</li>
+                    <li>☐ Menu slides in smoothly from left</li>
+                    <li>☐ Overlay appears with proper opacity</li>
+                    <li>☐ Body scroll is locked when menu is open</li>
+                    <li>☐ Clicking overlay closes menu</li>
+                    <li>☐ Clicking menu item closes menu</li>
+                    <li>☐ Font size is 16px (readable)</li>
+                    <li>☐ Menu items have proper spacing</li>
+                    <li>☐ Animations are smooth (no jank)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle - Exact implementation from reference HTML
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        const menuOverlay = document.querySelector('.menu-overlay');
+        const menuItems = document.querySelectorAll('.nav-links a');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.add('active');
+            menuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        function closeMenu() {
+            navLinks.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        menuOverlay.addEventListener('click', closeMenu);
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', closeMenu);
+        });
+
+        // Log current viewport width for testing
+        console.log('Current viewport width:', window.innerWidth);
+        window.addEventListener('resize', () => {
+            console.log('Viewport width:', window.innerWidth);
+        });
+    </script>
+</body>
+</html>

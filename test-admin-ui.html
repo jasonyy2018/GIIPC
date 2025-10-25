@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0B4D3E;
+            margin-bottom: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 4px solid #0B4D3E;
+        }
+        .test-section h2 {
+            color: #0B4D3E;
+            margin-top: 0;
+        }
+        .credentials {
+            background: #fff;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .credentials strong {
+            color: #E63946;
+        }
+        button {
+            background: #E63946;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #d32f3c;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            border-left: 4px solid #2196f3;
+        }
+        .success {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            border-left: 4px solid #4caf50;
+        }
+        ul {
+            line-height: 1.8;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 GIIP Admin Dashboard Test Guide</h1>
+        
+        <div class="success">
+            <strong>✅ Admin Dashboard Successfully Deployed!</strong>
+            <p>All files have been added to the frontend container. The admin interface is now in English with a "View Site" button.</p>
+        </div>
+
+        <div class="test-section">
+            <h2>📋 Test Steps</h2>
+            <ol>
+                <li>Click the button below to open the homepage</li>
+                <li>Click the "Login" button in the top right corner</li>
+                <li>Use one of the test accounts below to login</li>
+                <li>After successful login, you'll be automatically redirected to the admin dashboard</li>
+                <li>Explore the management modules and features</li>
+                <li>Click "View Site" button in the header to return to the homepage</li>
+            </ol>
+            
+            <button onclick="window.open('http://localhost', '_blank')">
+                🌐 Open GIIP Homepage
+            </button>
+            <button onclick="window.open('http://localhost/admin.html', '_blank')">
+                🔧 Open Admin Dashboard Directly
+            </button>
+        </div>
+
+        <div class="test-section">
+            <h2>🔐 Test Accounts</h2>
+            
+            <div class="credentials">
+                <h3>👑 Admin Account (Full Access)</h3>
+                <p><strong>Email:</strong> <code>admin@giip.info</code></p>
+                <p><strong>Password:</strong> <code>admin123</code></p>
+                <p><strong>Permissions:</strong> Can manage all content and users</p>
+            </div>
+
+            <div class="credentials">
+                <h3>✏️ Editor Account (Content Management)</h3>
+                <p><strong>Email:</strong> <code>editor@giip.info</code></p>
+                <p><strong>Password:</strong> <code>editor123</code></p>
+                <p><strong>Permissions:</strong> Can manage news, events, and conferences</p>
+            </div>
+
+            <div class="credentials">
+                <h3>👤 User Account (No Admin Access)</h3>
+                <p><strong>Email:</strong> <code>user@giip.info</code></p>
+                <p><strong>Password:</strong> <code>user123</code></p>
+                <p><strong>Permissions:</strong> Cannot access admin dashboard</p>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>✨ Admin Dashboard Features</h2>
+            <ul>
+                <li><strong>Dashboard:</strong> View system statistics (news, events, conferences, users count)</li>
+                <li><strong>News Management:</strong> View, edit, and delete news items</li>
+                <li><strong>Events Management:</strong> View, edit, and delete events</li>
+                <li><strong>Conferences Management:</strong> View, edit, and delete conferences</li>
+                <li><strong>User Management:</strong> View user list and change user roles (admin only)</li>
+                <li><strong>View Site Button:</strong> Quick link to return to the main website</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>🎨 Interface Features</h2>
+            <ul>
+                <li>Fully English interface</li>
+                <li>Responsive design for desktop and mobile devices</li>
+                <li>Sidebar navigation for easy module switching</li>
+                <li>Data tables with clear presentation</li>
+                <li>Action buttons for quick edit and delete operations</li>
+                <li>Statistics cards showing real-time data overview</li>
+                <li>"View Site" button in header to return to homepage</li>
+            </ul>
+        </div>
+
+        <div class="info">
+            <h3>💡 Testing Suggestions</h3>
+            <ul>
+                <li>Login with admin account first to experience full functionality</li>
+                <li>Try deleting a news item or event to test delete functionality</li>
+                <li>Change a user's role in user management</li>
+                <li>Click "View Site" button to return to homepage</li>
+                <li>Logout and login with editor account to compare permission differences</li>
+                <li>Login with regular user account to verify no admin access</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>📁 Updated Files</h2>
+            <ul>
+                <li><code>frontend/admin.html</code> - Admin dashboard HTML (now in English)</li>
+                <li><code>frontend/js/admin.js</code> - Admin dashboard logic (all messages in English)</li>
+                <li><code>frontend/js/auth.js</code> - Authentication module (updated link text)</li>
+                <li><code>frontend/js/api-client.js</code> - API client (includes AdminAPI)</li>
+                <li><code>frontend/css/auth.css</code> - Styles (user menu styles)</li>
+                <li><code>frontend/Dockerfile</code> - Updated to include admin.html</li>
+            </ul>
+        </div>
+
+        <div class="success">
+            <h3>🎉 What's New</h3>
+            <ul>
+                <li>✅ All admin interface text is now in English</li>
+                <li>✅ Added "View Site" button in header to return to homepage</li>
+                <li>✅ Updated all confirmation dialogs and messages to English</li>
+                <li>✅ Changed "Admin Dashboard" link text in user menu</li>
+            </ul>
+            <p>Click the buttons above to start testing the admin dashboard!</p>
+            <p>If you encounter any issues, check the browser console for error messages.</p>
+        </div>
+    </div>
+</body>
+</html>

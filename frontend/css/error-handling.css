@@ -1,0 +1,229 @@
+/**
+ * Error Handling and Loading States CSS
+ * Styles for error messages, loading spinners, empty states, and toasts
+ */
+
+/* Error Message Styles */
+.error-message {
+    animation: fadeIn 0.3s ease-in;
+}
+
+.error-message i {
+    display: block;
+}
+
+.error-retry-btn {
+    transition: all 0.3s ease;
+}
+
+.error-retry-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.error-retry-btn:active {
+    transform: translateY(0);
+}
+
+/* Inline Error Styles */
+.inline-error {
+    animation: slideDown 0.3s ease-out;
+}
+
+/* Success Message Styles */
+.success-message {
+    animation: fadeIn 0.3s ease-in;
+}
+
+.success-message i {
+    display: block;
+}
+
+/* Loading State Styles */
+.loading-state {
+    animation: fadeIn 0.3s ease-in;
+}
+
+.loading-state i {
+    display: block;
+}
+
+/* Spinner Animation */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.fa-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Empty State Styles */
+.empty-state {
+    animation: fadeIn 0.3s ease-in;
+}
+
+.empty-state i {
+    display: block;
+}
+
+.empty-action-btn {
+    transition: all 0.3s ease;
+}
+
+.empty-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(27, 94, 32, 0.3);
+}
+
+.empty-action-btn:active {
+    transform: translateY(0);
+}
+
+/* Toast Notification Styles */
+.toast-notification {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 9999;
+    min-width: 300px;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease-out;
+}
+
+.toast-notification.toast-exit {
+    animation: slideDown 0.3s ease-in;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Button Loading State */
+button[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+button[disabled]:hover {
+    transform: none !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .error-message,
+    .success-message {
+        padding: 1rem;
+    }
+    
+    .error-message h3,
+    .success-message h3 {
+        font-size: 1rem;
+    }
+    
+    .error-message p,
+    .success-message p {
+        font-size: 0.875rem;
+    }
+    
+    .toast-notification {
+        bottom: 1rem;
+        right: 1rem;
+        left: 1rem;
+        min-width: auto;
+    }
+    
+    .empty-state i {
+        font-size: 3rem !important;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.125rem;
+    }
+}
+
+/* Accessibility */
+.error-message:focus,
+.success-message:focus,
+.empty-state:focus {
+    outline: 3px solid #E63946;
+    outline-offset: 2px;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .error-message {
+        border-width: 2px;
+    }
+    
+    .success-message {
+        border-width: 2px;
+    }
+    
+    .inline-error {
+        border-left-width: 6px;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .error-message,
+    .success-message,
+    .loading-state,
+    .empty-state,
+    .toast-notification,
+    .inline-error {
+        animation: none;
+    }
+    
+    .error-retry-btn:hover,
+    .empty-action-btn:hover {
+        transform: none;
+    }
+    
+    .fa-spin {
+        animation: none;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .error-message,
+    .loading-state,
+    .toast-notification {
+        display: none;
+    }
+}

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最终验证 - 移动端菜单</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0B4D3E',
+                        'accent': '#E63946',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --primary-dark: #0B4D3E;
+        }
+
+        #mobile-nav-drawer.active {
+            left: 0 !important;
+        }
+
+        .menu-overlay.active {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        .test-banner {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .comparison-box h3 {
+            margin-bottom: 15px;
+            color: #0B4D3E;
+        }
+
+        .sample-text {
+            border: 2px solid #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f9fafb;
+            margin: 10px 0;
+        }
+
+        .correct {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .viewport-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #dc2626;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-primary-dark sticky top-0 z-[100] shadow-lg">
+        <div class="container mx-auto px-5 max-w-[1200px]">
+            <nav class="flex justify-between items-center py-[15px]">
+                <div class="text-white text-[22px] font-bold">GIIP</div>
+                <button class="mobile-menu-btn hidden md:hidden bg-transparent border-none text-white text-2xl cursor-pointer px-2.5 py-1.5 z-[110]">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="menu-overlay fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-[104] opacity-0 invisible transition-all duration-300"></div>
+
+    <!-- Mobile Navigation Drawer -->
+    <nav id="mobile-nav-drawer"
+        class="md:hidden fixed top-0 -left-full w-[85%] max-w-[320px] h-screen bg-primary-dark flex flex-col pt-20 px-[25px] pb-[30px] shadow-[2px_0_15px_rgba(0,0,0,0.2)] z-[105] transition-all duration-[400ms]">
+        <ul class="list-none">
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block text-[16px] !leading-[22.4px] py-[10px] px-3">Home</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block text-[16px] !leading-[22.4px] py-[10px] px-3">News</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block text-[16px] !leading-[22.4px] py-[10px] px-3">Upcoming Events</a>
+            </li>
+        </ul>
+        <div class="mt-6 pt-6 border-t border-white/10">
+            <a href="#" class="text-white no-underline block text-[16px] !leading-[22.4px] py-[10px] px-3 mb-3 border border-white/30 rounded-md text-center">Login</a>
+            <a href="#" class="bg-accent text-white no-underline block text-[16px] !leading-[22.4px] py-[10px] px-3 rounded-md text-center">Register</a>
+        </div>
+    </nav>
+
+    <!-- Test Banner -->
+    <div class="test-banner">
+        <h1 class="text-4xl font-bold mb-3">🔍 最终验证测试</h1>
+        <p class="text-xl">使用像素值：text-[16px] !leading-[22.4px]</p>
+    </div>
+
+    <!-- Comparison -->
+    <div class="comparison">
+        <div class="comparison-box">
+            <h3 class="text-xl font-bold">❌ 之前的问题</h3>
+            <div class="sample-text">
+                <div style="font-size: 16px; line-height: 1.6;">
+                    Upcoming Events
+                </div>
+                <p class="text-sm text-gray-600 mt-2">line-height: 1.6 (25.6px) - 太大</p>
+            </div>
+        </div>
+
+        <div class="comparison-box">
+            <h3 class="text-xl font-bold">✅ 现在的效果</h3>
+            <div class="sample-text correct">
+                <div style="font-size: 16px; line-height: 22.4px;">
+                    Upcoming Events
+                </div>
+                <p class="text-sm text-green-700 mt-2">line-height: 22.4px (1.4) - 正确</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="comparison-box" style="margin: 20px;">
+        <h3 class="text-xl font-bold mb-4">📋 验证步骤</h3>
+        <ol class="list-decimal ml-6 space-y-2">
+            <li>将浏览器窗口调整到移动端宽度（≤768px）</li>
+            <li>点击右上角的汉堡菜单按钮（☰）</li>
+            <li>右键点击任意菜单项 → 选择"检查"</li>
+            <li>在 Computed 标签页查看：
+                <ul class="list-disc ml-6 mt-2">
+                    <li>font-size: <strong>16px</strong></li>
+                    <li>line-height: <strong>22.4px</strong></li>
+                    <li>padding: <strong>10px 12px</strong></li>
+                </ul>
+            </li>
+            <li>在 Styles 标签页应该看到：
+                <code class="bg-gray-200 px-2 py-1 rounded">line-height: 22.4px !important;</code>
+            </li>
+        </ol>
+
+        <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+            <p class="font-semibold text-yellow-800">💡 关键改进</p>
+            <ul class="mt-2 space-y-1 text-yellow-700">
+                <li>• 使用 <code>text-[16px]</code> 替代 <code>text-base</code></li>
+                <li>• 使用 <code>!leading-[22.4px]</code> 替代 <code>!leading-[1.4]</code></li>
+                <li>• 直接使用像素值，避免计算问题</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Viewport Info -->
+    <div class="viewport-info">
+        <div class="text-2xl font-bold mb-1" id="viewport-width">-</div>
+        <div class="text-sm" id="viewport-status">-</div>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('#mobile-nav-drawer');
+        const menuOverlay = document.querySelector('.menu-overlay');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                navLinks.classList.add('active');
+                menuOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                // 自动检查样式
+                setTimeout(() => {
+                    const firstLink = document.querySelector('#mobile-nav-drawer ul li a');
+                    if (firstLink) {
+                        const styles = window.getComputedStyle(firstLink);
+                        console.log('========================================');
+                        console.log('🔍 最终验证 - 计算后的样式');
+                        console.log('========================================');
+                        console.log('font-size:', styles.fontSize);
+                        console.log('line-height:', styles.lineHeight);
+                        console.log('padding:', styles.padding);
+                        console.log('========================================');
+                        
+                        const fontSize = parseFloat(styles.fontSize);
+                        const lineHeight = parseFloat(styles.lineHeight);
+                        
+                        console.log('✅ 验证结果:');
+                        console.log('font-size 是否为 16px?', fontSize === 16 ? '✓ 正确' : '✗ 错误 (实际: ' + fontSize + 'px)');
+                        console.log('line-height 是否为 22.4px?', lineHeight === 22.4 ? '✓ 正确' : '✗ 错误 (实际: ' + lineHeight + 'px)');
+                        console.log('========================================');
+                    }
+                }, 100);
+            });
+        }
+
+        function closeMenu() {
+            navLinks.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        menuOverlay.addEventListener('click', closeMenu);
+
+        // Viewport info
+        function updateViewportInfo() {
+            const width = window.innerWidth;
+            document.getElementById('viewport-width').textContent = width + 'px';
+            document.getElementById('viewport-status').textContent = width <= 768 ? '移动端' : '桌面端';
+        }
+
+        updateViewportInfo();
+        window.addEventListener('resize', updateViewportInfo);
+    </script>
+</body>
+</html>

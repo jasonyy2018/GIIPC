@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Menu Typography Test - GIIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0B4D3E',
+                        'primary': '#1B5E20',
+                        'accent': '#E63946',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px; /* Proportional to 16px menu text */
+            cursor: pointer;
+            padding: 8px 12px;
+            z-index: 110;
+        }
+
+        .nav-links {
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .menu-overlay {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .nav-links.active {
+            left: 0 !important;
+        }
+        .menu-overlay.active {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        /* 移动端核心字体样式 - 参考Archibucks规范 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            font-size: 16px; /* 正文基础字体大小 - 与Archibucks一致 */
+            line-height: 1.6; /* 行间距 - 参考Archibucks的舒适阅读设置 */
+        }
+
+        /* 移动端菜单项样式 - 参考Archibucks */
+        .nav-links ul li a {
+            font-size: 16px !important;
+            line-height: 1.6 !important;
+            padding: 12px 12px !important;
+            font-weight: 400 !important;
+            letter-spacing: 0.034em !important;
+        }
+
+        /* 移动端认证按钮样式 */
+        .auth-links-mobile a {
+            font-size: 16px !important;
+            line-height: 1.6 !important;
+            font-weight: 400 !important;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-100">
+    
+    <!-- Header -->
+    <header class="bg-primary-dark sticky top-0 z-[100] shadow-lg">
+        <div class="container mx-auto px-5 max-w-[1200px]">
+            <nav class="flex justify-between items-center py-[15px]">
+                <a href="#" class="flex items-center">
+                    <div class="text-white text-[22px] font-bold tracking-wide">GIIP</div>
+                </a>
+                <button class="mobile-menu-btn bg-transparent border-none text-white text-2xl cursor-pointer px-2.5 py-1.5 z-[110]"
+                    onclick="toggleMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="menu-overlay fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-[104] opacity-0 invisible"
+        onclick="toggleMenu()"></div>
+
+    <!-- Mobile Navigation Drawer -->
+    <nav class="nav-links fixed top-0 -left-full w-[85%] max-w-[320px] h-screen bg-primary-dark flex-col pt-20 px-[25px] pb-[30px] shadow-[2px_0_15px_rgba(0,0,0,0.2)] z-[105]">
+        <ul class="list-none">
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block">Home</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block">News</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block">Upcoming Events</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block">Past Conferences</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block">Highlights</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block">About Us</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block">Contact Us</a>
+            </li>
+        </ul>
+        <div class="auth-links-mobile mt-6 pt-6 border-t border-white/10">
+            <a href="#" class="text-white no-underline py-3 px-3 block mb-3 border border-white/30 rounded-md text-center transition-all duration-300 hover:bg-white hover:text-primary-dark">Login</a>
+            <a href="#" class="bg-accent text-white no-underline py-3 px-3 block rounded-md text-center transition-all duration-300 hover:bg-accent/90">Register</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="p-8">
+        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-primary-dark mb-6">Mobile Menu Typography Test</h1>
+            
+            <div class="space-y-6">
+                <section class="border-l-4 border-accent pl-4">
+                    <h2 class="text-xl font-semibold text-primary-dark mb-3">Typography Updates - Archibucks Reference</h2>
+                    <p class="text-gray-700 mb-2">The mobile menu has been updated to match Archibucks design specifications:</p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><strong>Menu Font Size:</strong> 16px (Archibucks standard for mobile menu)</li>
+                        <li><strong>Menu Button Size:</strong> 20px (1.25x menu text, proportional)</li>
+                        <li><strong>Line Height:</strong> 1.6 (comfortable reading setting)</li>
+                        <li><strong>Letter Spacing:</strong> 0.034em (~0.544px)</li>
+                        <li><strong>Padding:</strong> 12px menu items, 8px 12px button</li>
+                        <li><strong>Font Weight:</strong> Regular (400) for clean readability</li>
+                        <li><strong>Font Family:</strong> System fonts (-apple-system, BlinkMacSystemFont, etc.)</li>
+                        <li><strong>Item Spacing:</strong> 12px margin-bottom</li>
+                    </ul>
+                </section>
+
+                <section class="border-l-4 border-primary pl-4">
+                    <h2 class="text-xl font-semibold text-primary-dark mb-3">Testing Instructions</h2>
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li>Click the hamburger menu icon (☰) in the top right corner</li>
+                        <li>Observe the mobile menu slide in from the left</li>
+                        <li>Check the font size and spacing of menu items</li>
+                        <li>Verify the letter spacing creates better readability</li>
+                        <li>Test the Login and Register buttons at the bottom</li>
+                        <li>Click outside the menu or the overlay to close it</li>
+                    </ol>
+                </section>
+
+                <section class="border-l-4 border-accent pl-4">
+                    <h2 class="text-xl font-semibold text-primary-dark mb-3">Comparison</h2>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-gray-50 p-4 rounded">
+                            <h3 class="font-semibold text-primary mb-2">Before</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>Font size: 20px</li>
+                                <li>Line height: 1.8</li>
+                                <li>Padding: 15px vertical</li>
+                                <li>Item spacing: 18px</li>
+                                <li>Font weight: Medium (500)</li>
+                                <li>Font family: Helvetica Neue</li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded">
+                            <h3 class="font-semibold text-accent mb-2">After (Archibucks Standard)</h3>
+                            <ul class="space-y-1 text-sm text-gray-700">
+                                <li>Font size: 16px</li>
+                                <li>Line height: 1.6</li>
+                                <li>Padding: 12px</li>
+                                <li>Item spacing: 12px</li>
+                                <li>Font weight: Regular (400)</li>
+                                <li>Font family: System fonts</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h3 class="font-semibold text-green-800 mb-2">✓ Typography Improvements</h3>
+                    <ul class="space-y-1 text-sm text-green-700">
+                        <li>✓ Consistent with Archibucks design standards</li>
+                        <li>✓ Proportional sizing (button 1.25x menu text)</li>
+                        <li>✓ Better visual hierarchy and readability</li>
+                        <li>✓ Improved letter spacing for clarity</li>
+                        <li>✓ System fonts for native feel and performance</li>
+                        <li>✓ Professional, polished appearance</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const overlay = document.querySelector('.menu-overlay');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            
+            navLinks.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            // Toggle icon
+            const icon = menuBtn.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                toggleMenu();
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test User Menu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0B4D3E',
+                        'accent': '#E63946',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-primary-dark sticky top-0 z-[100] shadow-lg">
+        <div class="container mx-auto px-5 max-w-[1200px]">
+            <nav class="flex justify-between items-center py-[15px]">
+                <div class="text-white text-[22px] font-bold">GIIP Test</div>
+                
+                <!-- User Menu (Desktop) -->
+                <div class="auth-links ml-[40px] relative">
+                    <!-- Logged Out State -->
+                    <div id="auth-logged-out" class="flex items-center gap-3">
+                        <button onclick="simulateLogin()" class="text-white no-underline font-medium text-base transition-all duration-300 py-2 px-4 border border-white/30 rounded-md hover:bg-white hover:text-primary-dark">
+                            Simulate Login
+                        </button>
+                    </div>
+                    
+                    <!-- Logged In State (Hidden by default) -->
+                    <div id="auth-logged-in" class="hidden">
+                        <button id="user-menu-button" class="flex items-center gap-2 text-white hover:opacity-80 transition-opacity">
+                            <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center font-semibold text-white">
+                                <span id="user-avatar-text">A</span>
+                            </div>
+                            <span id="user-email" class="text-sm font-medium">admin@giip.info</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50">
+                            <div class="px-4 py-3 border-b border-gray-200">
+                                <p class="text-sm text-gray-500">Signed in as</p>
+                                <p id="dropdown-email" class="text-sm font-semibold text-gray-900 truncate">admin@giip.info</p>
+                                <p id="dropdown-role" class="text-xs text-gray-500">(Admin)</p>
+                            </div>
+                            <a href="#" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                <i class="fas fa-cog text-gray-400"></i>
+                                <span>Admin Dashboard</span>
+                            </a>
+                            <button id="logout-button" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                <i class="fas fa-sign-out-alt text-red-400"></i>
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <div class="container mx-auto px-5 max-w-[1200px] py-10">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-primary-dark mb-4">User Menu Test</h1>
+            <p class="text-gray-600 mb-6">This page tests the user menu functionality.</p>
+            
+            <div class="space-y-4">
+                <div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded">
+                    <h3 class="font-semibold text-blue-900 mb-2">Test Steps:</h3>
+                    <ol class="list-decimal ml-5 space-y-1 text-blue-800">
+                        <li>Click "Simulate Login" button in the header</li>
+                        <li>You should see a user avatar with email</li>
+                        <li>Click the avatar to open dropdown menu</li>
+                        <li>Click "Logout" to return to logged out state</li>
+                    </ol>
+                </div>
+                
+                <div id="status" class="p-4 bg-gray-50 border border-gray-200 rounded">
+                    <h3 class="font-semibold text-gray-900 mb-2">Current Status:</h3>
+                    <p id="status-text" class="text-gray-700">Not logged in</p>
+                </div>
+                
+                <div class="p-4 bg-green-50 border-l-4 border-green-500 rounded">
+                    <h3 class="font-semibold text-green-900 mb-2">Console Log:</h3>
+                    <div id="console-log" class="text-sm text-green-800 font-mono space-y-1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function log(message) {
+            console.log(message);
+            const logDiv = document.getElementById('console-log');
+            const entry = document.createElement('div');
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(entry);
+        }
+
+        function updateStatus(text) {
+            document.getElementById('status-text').textContent = text;
+        }
+
+        function simulateLogin() {
+            log('Simulating login...');
+            
+            const loggedOutEl = document.getElementById('auth-logged-out');
+            const loggedInEl = document.getElementById('auth-logged-in');
+            
+            // Hide logged out, show logged in
+            loggedOutEl.classList.add('hidden');
+            loggedInEl.classList.remove('hidden');
+            
+            // Update user info
+            document.getElementById('user-avatar-text').textContent = 'A';
+            document.getElementById('user-email').textContent = 'admin@giip.info';
+            document.getElementById('dropdown-email').textContent = 'admin@giip.info';
+            document.getElementById('dropdown-role').textContent = '(Admin)';
+            
+            updateStatus('Logged in as admin@giip.info');
+            log('Login successful! User menu should now be visible.');
+            
+            // Setup dropdown
+            setupUserMenu();
+        }
+
+        function simulateLogout() {
+            log('Logging out...');
+            
+            const loggedOutEl = document.getElementById('auth-logged-out');
+            const loggedInEl = document.getElementById('auth-logged-in');
+            
+            // Show logged out, hide logged in
+            loggedOutEl.classList.remove('hidden');
+            loggedInEl.classList.add('hidden');
+            
+            updateStatus('Not logged in');
+            log('Logout successful! Login button should now be visible.');
+        }
+
+        function setupUserMenu() {
+            log('Setting up user menu dropdown...');
+            
+            const menuButton = document.getElementById('user-menu-button');
+            const dropdown = document.getElementById('user-dropdown');
+            const logoutButton = document.getElementById('logout-button');
+            
+            if (!menuButton || !dropdown) {
+                log('ERROR: Menu button or dropdown not found!');
+                return;
+            }
+            
+            log('Menu button and dropdown found.');
+            
+            // Toggle dropdown
+            menuButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = dropdown.classList.contains('hidden');
+                dropdown.classList.toggle('hidden');
+                menuButton.setAttribute('aria-expanded', !isHidden);
+                log(`Dropdown ${isHidden ? 'opened' : 'closed'}`);
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!menuButton.contains(e.target) && !dropdown.contains(e.target)) {
+                    if (!dropdown.classList.contains('hidden')) {
+                        dropdown.classList.add('hidden');
+                        menuButton.setAttribute('aria-expanded', 'false');
+                        log('Dropdown closed (clicked outside)');
+                    }
+                }
+            });
+            
+            // Logout button
+            if (logoutButton) {
+                logoutButton.addEventListener('click', () => {
+                    log('Logout button clicked');
+                    dropdown.classList.add('hidden');
+                    simulateLogout();
+                });
+            }
+            
+            log('User menu setup complete!');
+        }
+
+        // Initialize
+        log('Page loaded. Ready to test.');
+        updateStatus('Not logged in');
+    </script>
+</body>
+</html>

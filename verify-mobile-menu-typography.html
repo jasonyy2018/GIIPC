@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>移动端菜单字体验证工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section h2 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h2::before {
+            content: "✓";
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .checklist li:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .checklist li::before {
+            content: "☐";
+            font-size: 20px;
+            margin-right: 12px;
+            color: #667eea;
+        }
+
+        .code {
+            background: #2d3748;
+            color: #68d391;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .code-line {
+            margin: 5px 0;
+        }
+
+        .highlight {
+            background: #ffd93d;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .steps {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .steps li {
+            counter-increment: step-counter;
+            padding: 15px;
+            margin-bottom: 12px;
+            background: white;
+            border-radius: 8px;
+            position: relative;
+            padding-left: 50px;
+        }
+
+        .steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            width: 28px;
+            height: 28px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .alert {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #856404;
+        }
+
+        .alert strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 移动端菜单字体验证工具</h1>
+        <p class="subtitle">验证 GIIP 项目移动端菜单的字体样式是否正确应用</p>
+
+        <div class="section">
+            <h2>修复内容</h2>
+            <div class="alert success">
+                <strong>✅ 已完成修复</strong>
+                移动端菜单的字体大小和行间距已经通过添加 <span class="highlight">!important</span> 声明来确保正确应用。
+            </div>
+            <div class="code">
+                <div class="code-line">/* 移动端菜单项样式 */</div>
+                <div class="code-line">#mobile-nav-drawer ul li a {</div>
+                <div class="code-line">  font-size: 16px !important;</div>
+                <div class="code-line">  line-height: 1.6 !important;</div>
+                <div class="code-line">  padding: 12px 12px !important;</div>
+                <div class="code-line">  font-weight: 400 !important;</div>
+                <div class="code-line">  letter-spacing: 0.034em !important;</div>
+                <div class="code-line">}</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>测试步骤</h2>
+            <ol class="steps">
+                <li>打开 <code>frontend/index.html</code> 或运行 Docker 容器</li>
+                <li>打开浏览器开发者工具（按 <span class="highlight">F12</span>）</li>
+                <li>切换到移动端视图（按 <span class="highlight">Ctrl+Shift+M</span> 或 <span class="highlight">Cmd+Shift+M</span>）</li>
+                <li>选择移动设备（如 iPhone 12 Pro，宽度 390px）</li>
+                <li>点击右上角的汉堡菜单按钮（☰）</li>
+                <li>使用元素选择器（Ctrl+Shift+C）点击菜单项</li>
+                <li>在 <span class="highlight">Computed</span> 标签页查看计算后的样式</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>预期结果</h2>
+            <p style="margin-bottom: 15px;">在开发者工具的 Computed 标签页中，应该看到以下值：</p>
+            <div class="code">
+                <div class="code-line">font-size: 16px</div>
+                <div class="code-line">line-height: 25.6px (16px × 1.6)</div>
+                <div class="code-line">font-weight: 400</div>
+                <div class="code-line">letter-spacing: 0.544px (16px × 0.034)</div>
+                <div class="code-line">padding: 12px</div>
+                <div class="code-line">font-family: -apple-system, BlinkMacSystemFont, ...</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>验证清单</h2>
+            <ul class="checklist">
+                <li>菜单项字体大小为 16px</li>
+                <li>行间距为 1.6（计算值 25.6px）</li>
+                <li>字体粗细为 400（normal）</li>
+                <li>字母间距为 0.034em（计算值 0.544px）</li>
+                <li>内边距为 12px</li>
+                <li>使用系统字体（-apple-system 等）</li>
+                <li>Login 按钮字体为 16px</li>
+                <li>Register 按钮字体为 16px</li>
+                <li>文字清晰可读</li>
+                <li>间距舒适自然</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>关键改进</h2>
+            <ul class="checklist">
+                <li>所有字体样式添加了 <span class="highlight">!important</span> 声明</li>
+                <li>为 <code>#mobile-nav-drawer</code> 容器设置了字体族</li>
+                <li>增强了菜单项的 <code>display: block</code> 属性</li>
+                <li>统一了认证按钮的字体样式</li>
+                <li>确保移动端菜单的 <code>display: flex</code> 生效</li>
+            </ul>
+        </div>
+
+        <div class="alert">
+            <strong>💡 提示</strong>
+            如果字体样式仍然不正确，请清除浏览器缓存（Ctrl+Shift+R 或 Cmd+Shift+R）后重新测试。
+        </div>
+
+        <div class="btn-group">
+            <a href="test-mobile-menu-typography-fix.html" class="btn">打开测试页面</a>
+            <a href="frontend/index.html" class="btn" style="background: #28a745;">打开主页面</a>
+            <button class="btn" style="background: #6c757d;" onclick="window.print()">打印此页面</button>
+        </div>
+    </div>
+
+    <script>
+        // 显示当前视口信息
+        console.log('当前视口宽度:', window.innerWidth + 'px');
+        console.log('当前视口高度:', window.innerHeight + 'px');
+        console.log('设备像素比:', window.devicePixelRatio);
+        
+        window.addEventListener('resize', () => {
+            console.log('视口宽度变化:', window.innerWidth + 'px');
+        });
+    </script>
+</body>
+</html>

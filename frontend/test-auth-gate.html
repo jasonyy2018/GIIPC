@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Gate Test - GIIP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #1B4D89;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background: #1B4D89;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #153a6b;
+        }
+        .test-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .test-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1><i class="fas fa-shield-alt"></i> Authentication Gate Test</h1>
+    
+    <div class="test-section">
+        <h2>Current Authentication Status</h2>
+        <div id="auth-status" class="status info">
+            <i class="fas fa-spinner fa-spin"></i> Checking authentication status...
+        </div>
+        <div id="user-info"></div>
+        <button id="logout-btn" style="display: none;">Logout</button>
+        <button id="login-btn" style="display: none;">Login</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 1: Event Card Click (Authenticated)</h2>
+        <p>When authenticated, clicking an event card should navigate directly to the event detail page.</p>
+        <div class="test-card" id="test-card-1">
+            <h3>Test Event 1</h3>
+            <p>Click this card to test authenticated navigation</p>
+        </div>
+        <div id="test1-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Event Card Click (Not Authenticated)</h2>
+        <p>When not authenticated, clicking an event card should show the login modal and store the intended destination.</p>
+        <div class="test-card" id="test-card-2">
+            <h3>Test Event 2</h3>
+            <p>Click this card to test unauthenticated navigation</p>
+        </div>
+        <div id="test2-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Intended Destination Storage</h2>
+        <p>Check if the intended destination is properly stored in sessionStorage.</p>
+        <button id="check-storage-btn">Check SessionStorage</button>
+        <div id="storage-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: Post-Login Redirect</h2>
+        <p>After logging in, the user should be redirected to the stored intended destination.</p>
+        <ol>
+            <li>Logout if currently logged in</li>
+            <li>Click on an event card (should show login modal)</li>
+            <li>Login with valid credentials</li>
+            <li>Verify you're redirected to the event detail page</li>
+        </ol>
+        <div id="test4-result" class="status info">
+            <strong>Manual Test:</strong> Follow the steps above to verify post-login redirect functionality.
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 5: Event Detail Page Auth-Required UI</h2>
+        <p>When visiting an event detail page while not authenticated, the auth-required message should be shown.</p>
+        <button id="visit-event-btn">Visit Event Detail Page (Event ID: 1)</button>
+        <div id="test5-result" class="status info">
+            <strong>Manual Test:</strong> Click the button above to visit an event detail page. If not logged in, you should see the auth-required message with Login and Register buttons.
+        </div>
+    </div>
+
+    <!-- Include required scripts -->
+    <script type="module">
+        import { handleEventCardClick } from './js/components/event-card.js';
+        import { authManager } from './js/auth.js';
+
+        // Wait for auth manager to initialize
+        setTimeout(() => {
+            updateAuthStatus();
+        }, 500);
+
+        function updateAuthStatus() {
+            const statusDiv = document.getElementById('auth-status');
+            const userInfoDiv = document.getElementById('user-info');
+            const logoutBtn = document.getElementById('logout-btn');
+            const loginBtn = document.getElementById('login-btn');
+
+            if (authManager.isAuthenticated()) {
+                const user = authManager.getUser();
+                statusDiv.className = 'status success';
+                statusDiv.innerHTML = '<i class="fas fa-check-circle"></i> <strong>Authenticated</strong>';
+                userInfoDiv.innerHTML = `
+                    <p><strong>Email:</strong> ${user.email}</p>
+                    <p><strong>Role:</strong> ${user.role}</p>
+                `;
+                logoutBtn.style.display = 'inline-block';
+                loginBtn.style.display = 'none';
+            } else {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '<i class="fas fa-times-circle"></i> <strong>Not Authenticated</strong>';
+                userInfoDiv.innerHTML = '<p>Please login to test authenticated features.</p>';
+                logoutBtn.style.display = 'none';
+                loginBtn.style.display = 'inline-block';
+            }
+        }
+
+        // Logout button
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            authManager.logout();
+            setTimeout(updateAuthStatus, 500);
+        });
+
+        // Login button
+        document.getElementById('login-btn').addEventListener('click', () => {
+            authManager.showLoginModal();
+        });
+
+        // Test 1: Authenticated click
+        document.getElementById('test-card-1').addEventListener('click', () => {
+            const resultDiv = document.getElementById('test1-result');
+            
+            if (authManager.isAuthenticated()) {
+                resultDiv.className = 'status info';
+                resultDiv.innerHTML = '<i class="fas fa-info-circle"></i> Navigating to event detail page...';
+                // Simulate event card click
+                handleEventCardClick(1, authManager);
+            } else {
+                resultDiv.className = 'status error';
+                resultDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> You must be logged in to test this. Please login first.';
+            }
+        });
+
+        // Test 2: Unauthenticated click
+        document.getElementById('test-card-2').addEventListener('click', () => {
+            const resultDiv = document.getElementById('test2-result');
+            
+            if (!authManager.isAuthenticated()) {
+                resultDiv.className = 'status success';
+                resultDiv.innerHTML = '<i class="fas fa-check-circle"></i> Login modal should appear. Check if intended destination is stored in sessionStorage.';
+                // Simulate event card click
+                handleEventCardClick(2, authManager);
+            } else {
+                resultDiv.className = 'status error';
+                resultDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> You must be logged out to test this. Please logout first.';
+            }
+        });
+
+        // Test 3: Check storage
+        document.getElementById('check-storage-btn').addEventListener('click', () => {
+            const resultDiv = document.getElementById('storage-result');
+            const intendedDestination = sessionStorage.getItem('intendedDestination');
+            
+            if (intendedDestination) {
+                resultDiv.className = 'status success';
+                resultDiv.innerHTML = `
+                    <i class="fas fa-check-circle"></i> <strong>Intended Destination Found:</strong><br>
+                    <code>${intendedDestination}</code>
+                `;
+            } else {
+                resultDiv.className = 'status info';
+                resultDiv.innerHTML = '<i class="fas fa-info-circle"></i> No intended destination stored. Click on an event card while logged out to set one.';
+            }
+        });
+
+        // Test 5: Visit event detail page
+        document.getElementById('visit-event-btn').addEventListener('click', () => {
+            window.location.href = '/event-detail.html?id=1';
+        });
+
+        // Listen for auth changes
+        window.addEventListener('storage', updateAuthStatus);
+        
+        // Refresh auth status every 2 seconds
+        setInterval(updateAuthStatus, 2000);
+    </script>
+</body>
+</html>

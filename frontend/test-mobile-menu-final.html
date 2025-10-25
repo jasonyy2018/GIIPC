@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>移动端菜单最终测试 - GIIP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/typography.css">
+    <link rel="stylesheet" href="css/mobile-menu.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0B4D3E',
+                        'primary': '#1B5E20',
+                        'accent': '#E63946',
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .test-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 200;
+            max-width: 350px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .test-panel h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #0B4D3E;
+        }
+        .test-result {
+            font-size: 13px;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .pass { color: #4caf50; }
+        .fail { color: #f44336; }
+        .info { color: #2196f3; }
+        .nav-links { transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="font-sans bg-gray-100">
+    
+    <!-- 测试面板 -->
+    <div class="test-panel">
+        <h3>📱 移动端菜单测试</h3>
+        <button onclick="openMenu()" class="bg-primary text-white px-4 py-2 rounded text-sm w-full mb-3">
+            打开菜单
+        </button>
+        <button onclick="runTests()" class="bg-accent text-white px-4 py-2 rounded text-sm w-full mb-3">
+            运行测试
+        </button>
+        <div id="test-results"></div>
+        <div id="measurements" class="mt-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-primary-dark sticky top-0 z-[100] shadow-lg">
+        <div class="container mx-auto px-5 max-w-[1200px]">
+            <nav class="flex justify-between items-center py-[15px]">
+                <div class="text-white text-[22px] font-bold">GIIP 测试</div>
+                <button class="mobile-menu-btn md:hidden bg-transparent border-none text-white text-2xl cursor-pointer px-2.5 py-1.5 z-[110]"
+                    onclick="openMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="menu-overlay fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-[104] opacity-0 invisible transition-all duration-300"
+        onclick="closeMenu()"></div>
+
+    <!-- Mobile Navigation Drawer -->
+    <nav id="mobile-nav-drawer"
+        class="nav-links md:hidden fixed top-0 -left-full w-[85%] max-w-[320px] h-screen bg-primary-dark flex-col pt-20 px-[25px] pb-[30px] shadow-[2px_0_15px_rgba(0,0,0,0.2)] z-[105]">
+        <ul class="list-none">
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#home" class="text-white no-underline text-base py-[10px] px-[12px] block leading-[1.4]">Home</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#news" class="text-white no-underline text-base py-[10px] px-[12px] block leading-[1.4]">News</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#events" class="text-white no-underline text-base py-[10px] px-[12px] block leading-[1.4]">Events</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#conferences" class="text-white no-underline text-base py-[10px] px-[12px] block leading-[1.4]">Conferences</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#highlights" class="text-white no-underline text-base py-[10px] px-[12px] block leading-[1.4]">Highlights</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#about" class="text-white no-underline text-base py-[10px] px-[12px] block leading-[1.4]">About</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#contact" class="text-white no-underline text-base py-[10px] px-[12px] block leading-[1.4]">Contact</a>
+            </li>
+        </ul>
+        <div class="auth-links-mobile mt-6 pt-6 border-t border-white/10">
+            <a href="#login" class="text-white no-underline text-base py-3 px-3 block mb-3 border border-white/30 rounded-md text-center">Login</a>
+            <a href="#register" class="bg-accent text-white no-underline text-base py-3 px-3 block rounded-md text-center">Register</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="py-20">
+        <div class="container mx-auto px-5 max-w-[1200px]">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h1 class="text-3xl font-bold text-primary-dark mb-6">移动端菜单样式测试</h1>
+                
+                <div class="space-y-4">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
+                        <h3 class="font-semibold text-blue-900 mb-2">测试说明</h3>
+                        <p class="text-blue-800 text-sm">
+                            1. 点击右上角的"打开菜单"按钮<br>
+                            2. 点击"运行测试"查看样式是否符合要求<br>
+                            3. 在移动设备或浏览器移动视图中测试
+                        </p>
+                    </div>
+
+                    <div class="bg-green-50 border-l-4 border-green-500 p-4">
+                        <h3 class="font-semibold text-green-900 mb-2">预期样式（移动端 ≤768px）</h3>
+                        <ul class="text-green-800 text-sm space-y-1 list-disc pl-5">
+                            <li>字体：系统字体栈</li>
+                            <li>字体大小：16px</li>
+                            <li>行高：1.4</li>
+                            <li>链接内边距：上下 10px，左右 12px</li>
+                            <li>列表项间距：12px</li>
+                            <li>容器内边距：左右 25px，上 80px，下 30px</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function openMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const overlay = document.querySelector('.menu-overlay');
+            navLinks.style.left = '0';
+            overlay.style.opacity = '1';
+            overlay.style.visibility = 'visible';
+            
+            setTimeout(runTests, 500);
+        }
+
+        function closeMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const overlay = document.querySelector('.menu-overlay');
+            navLinks.style.left = '-100%';
+            overlay.style.opacity = '0';
+            overlay.style.visibility = 'hidden';
+        }
+
+        function runTests() {
+            const nav = document.getElementById('mobile-nav-drawer');
+            const ul = nav.querySelector('ul');
+            const lis = ul.querySelectorAll('li');
+            const firstLink = lis[0].querySelector('a');
+            
+            const navStyles = window.getComputedStyle(nav);
+            const liStyles = window.getComputedStyle(lis[0]);
+            const linkStyles = window.getComputedStyle(firstLink);
+            
+            // 计算行高比例
+            const lineHeightRatio = parseFloat(linkStyles.lineHeight) / parseFloat(linkStyles.fontSize);
+            
+            const tests = [
+                {
+                    name: '容器左内边距 = 25px',
+                    actual: navStyles.paddingLeft,
+                    expected: '25px',
+                    pass: navStyles.paddingLeft === '25px'
+                },
+                {
+                    name: '容器右内边距 = 25px',
+                    actual: navStyles.paddingRight,
+                    expected: '25px',
+                    pass: navStyles.paddingRight === '25px'
+                },
+                {
+                    name: '容器上内边距 = 80px',
+                    actual: navStyles.paddingTop,
+                    expected: '80px',
+                    pass: navStyles.paddingTop === '80px'
+                },
+                {
+                    name: '容器下内边距 = 30px',
+                    actual: navStyles.paddingBottom,
+                    expected: '30px',
+                    pass: navStyles.paddingBottom === '30px'
+                },
+                {
+                    name: 'li 下边距 = 12px',
+                    actual: liStyles.marginBottom,
+                    expected: '12px',
+                    pass: liStyles.marginBottom === '12px'
+                },
+                {
+                    name: '链接上内边距 = 10px',
+                    actual: linkStyles.paddingTop,
+                    expected: '10px',
+                    pass: linkStyles.paddingTop === '10px'
+                },
+                {
+                    name: '链接下内边距 = 10px',
+                    actual: linkStyles.paddingBottom,
+                    expected: '10px',
+                    pass: linkStyles.paddingBottom === '10px'
+                },
+                {
+                    name: '链接左内边距 = 12px',
+                    actual: linkStyles.paddingLeft,
+                    expected: '12px',
+                    pass: linkStyles.paddingLeft === '12px'
+                },
+                {
+                    name: '链接右内边距 = 12px',
+                    actual: linkStyles.paddingRight,
+                    expected: '12px',
+                    pass: linkStyles.paddingRight === '12px'
+                },
+                {
+                    name: '链接字体大小 = 16px',
+                    actual: linkStyles.fontSize,
+                    expected: '16px',
+                    pass: linkStyles.fontSize === '16px'
+                },
+                {
+                    name: '链接行高 ≈ 1.4',
+                    actual: lineHeightRatio.toFixed(2),
+                    expected: '1.40',
+                    pass: lineHeightRatio >= 1.35 && lineHeightRatio <= 1.45
+                }
+            ];
+            
+            let html = '<div class="text-xs">';
+            let passCount = 0;
+            
+            tests.forEach(test => {
+                const icon = test.pass ? '✓' : '✗';
+                const className = test.pass ? 'pass' : 'fail';
+                html += `<div class="test-result ${className}">
+                    ${icon} ${test.name}<br>
+                    <span class="info">实际: ${test.actual} | 预期: ${test.expected}</span>
+                </div>`;
+                if (test.pass) passCount++;
+            });
+            
+            html += `</div>`;
+            html += `<div class="mt-3 p-2 rounded ${passCount === tests.length ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                <strong>结果: ${passCount}/${tests.length} 通过</strong>
+            </div>`;
+            
+            document.getElementById('test-results').innerHTML = html;
+            
+            // 显示详细测量值
+            const measurements = `
+                <div class="text-xs bg-gray-50 p-2 rounded">
+                    <strong>详细测量:</strong><br>
+                    字体: ${linkStyles.fontFamily}<br>
+                    字体大小: ${linkStyles.fontSize}<br>
+                    行高: ${linkStyles.lineHeight} (${lineHeightRatio.toFixed(2)})<br>
+                    链接高度: ${firstLink.offsetHeight}px
+                </div>
+            `;
+            document.getElementById('measurements').innerHTML = measurements;
+        }
+
+        // 页面加载后自动打开菜单并测试（仅在移动视图）
+        window.addEventListener('load', () => {
+            if (window.innerWidth <= 768) {
+                setTimeout(() => {
+                    openMenu();
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>

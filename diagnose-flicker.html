@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>闪烁问题诊断工具</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: monospace;
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 2rem;
+        }
+        .log-entry {
+            padding: 0.5rem;
+            border-left: 3px solid #00ff00;
+            margin-bottom: 0.5rem;
+            background: #2a2a2a;
+        }
+        .error { border-left-color: #ff0000; color: #ff6b6b; }
+        .warning { border-left-color: #ffaa00; color: #ffd93d; }
+        .success { border-left-color: #00ff00; color: #6bcf7f; }
+        .info { border-left-color: #00aaff; color: #6bb6ff; }
+        
+        /* Test area with NO transitions */
+        .test-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        .test-img {
+            width: 100%;
+            height: 200px;
+            background: #e5e7eb;
+        }
+        .test-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* NO transitions or animations */
+            transition: none !important;
+            animation: none !important;
+            opacity: 1 !important;
+        }
+        .test-date {
+            padding: 1rem;
+            color: #666;
+            /* NO transitions */
+            transition: none !important;
+            animation: none !important;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-3xl mb-4">🔍 闪烁问题诊断工具</h1>
+    
+    <div class="mb-4">
+        <button onclick="runDiagnostics()" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+            运行诊断
+        </button>
+        <button onclick="testImages()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 ml-2">
+            测试图片加载
+        </button>
+        <button onclick="clearLogs()" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 ml-2">
+            清除日志
+        </button>
+    </div>
+
+    <div id="logs" class="mb-4"></div>
+    
+    <div id="test-area"></div>
+
+    <script type="module">
+        import { ConferencesAPI } from './frontend/js/api-client.js';
+        import { formatDateRange } from './frontend/js/timezone-utils.js';
+
+        window.log = function(message, type = 'info') {
+            const logs = document.getElementById('logs');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logs.appendChild(entry);
+            logs.scrollTop = logs.scrollHeight;
+            console.log(`[${type.toUpperCase()}]`, message);
+        };
+
+        window.clearLogs = function() {
+            document.getElementById('logs').innerHTML = '';
+        };
+
+        window.runDiagnostics = async function() {
+            clearLogs();
+            log('开始诊断...', 'info');
+            
+            try {
+                // 1. 检查API连接
+                log('1. 检查API连接...', 'info');
+                const response = await ConferencesAPI.getPast();
+                log(`✓ API响应成功，状态: ${response.status || 'OK'}`, 'success');
+                
+                // 2. 检查数据
+                const conferences = response.data || [];
+                log(`✓ 获取到 ${conferences.length} 个会议`, 'success');
+                
+                if (conferences.length === 0) {
+                    log('⚠ 警告：没有会议数据！', 'warning');
+                    return;
+                }
+                
+                // 3. 检查每个会议的数据
+                conferences.forEach((conf, index) => {
+                    log(`\n会议 ${index + 1}:`, 'info');
+                    log(`  标题: ${conf.title}`, 'info');
+                    log(`  image_url: ${conf.image_url || '❌ 缺失!'}`, conf.image_url ? 'success' : 'error');
+                    log(`  start_date: ${conf.start_date || '❌ 缺失!'}`, conf.start_date ? 'success' : 'error');
+                    log(`  end_date: ${conf.end_date || '❌ 缺失!'}`, conf.end_date ? 'success' : 'error');
+                    
+                    // 测试日期格式化
+                    if (conf.start_date && conf.end_date) {
+                        try {
+                            const formatted = formatDateRange(conf.start_date, conf.end_date);
+                            log(`  格式化日期: ${formatted}`, 'success');
+                        } catch (e) {
+                            log(`  ❌ 日期格式化失败: ${e.message}`, 'error');
+                        }
+                    }
+                });
+                
+                // 4. 检查CSS文件
+                log('\n4. 检查CSS文件...', 'info');
+                const cssLinks = document.querySelectorAll('link[rel="stylesheet"]');
+                let antiFlickerFound = false;
+                cssLinks.forEach(link => {
+                    if (link.href.includes('anti-flicker')) {
+                        antiFlickerFound = true;
+                        log(`✓ 找到 anti-flicker.css: ${link.href}`, 'success');
+                    }
+                });
+                if (!antiFlickerFound) {
+                    log('⚠ 警告：未找到 anti-flicker.css！', 'warning');
+                }
+                
+                // 5. 检查图片URL可访问性
+                log('\n5. 测试图片URL...', 'info');
+                for (const conf of conferences.slice(0, 3)) {
+                    if (conf.image_url) {
+                        try {
+                            const img = new Image();
+                            const loadPromise = new Promise((resolve, reject) => {
+                                img.onload = () => resolve(true);
+                                img.onerror = () => reject(new Error('加载失败'));
+                                setTimeout(() => reject(new Error('超时')), 5000);
+                            });
+                            img.src = conf.image_url;
+                            await loadPromise;
+                            log(`✓ 图片加载成功: ${conf.image_url.substring(0, 50)}...`, 'success');
+                        } catch (e) {
+                            log(`❌ 图片加载失败: ${conf.image_url.substring(0, 50)}... (${e.message})`, 'error');
+                        }
+                    }
+                }
+                
+                log('\n✅ 诊断完成！', 'success');
+                
+            } catch (error) {
+                log(`❌ 诊断失败: ${error.message}`, 'error');
+                console.error(error);
+            }
+        };
+
+        window.testImages = async function() {
+            clearLogs();
+            log('开始图片加载测试...', 'info');
+            
+            try {
+                const response = await ConferencesAPI.getPast();
+                const conferences = response.data || [];
+                
+                if (conferences.length === 0) {
+                    log('没有数据可测试', 'warning');
+                    return;
+                }
+                
+                const testArea = document.getElementById('test-area');
+                testArea.innerHTML = '<h2 class="text-xl text-white mb-4">图片加载测试（观察是否闪烁）</h2>';
+                
+                conferences.forEach((conf, index) => {
+                    const dateDisplay = formatDateRange(conf.start_date, conf.end_date);
+                    
+                    const card = document.createElement('div');
+                    card.className = 'test-card';
+                    card.innerHTML = `
+                        <div class="test-img">
+                            <img src="${conf.image_url}" alt="${conf.title}" loading="eager">
+                        </div>
+                        <div class="test-date">
+                            <div style="color: #666; font-size: 14px; margin-bottom: 8px;">${dateDisplay}</div>
+                            <div style="color: #333; font-weight: bold;">${conf.title}</div>
+                        </div>
+                    `;
+                    testArea.appendChild(card);
+                    
+                    log(`渲染卡片 ${index + 1}: ${conf.title}`, 'info');
+                });
+                
+                log('✓ 所有卡片已渲染，请观察是否有闪烁', 'success');
+                log('提示：如果看到闪烁，可能是：', 'info');
+                log('  1. 浏览器缓存未清除', 'warning');
+                log('  2. CSS transition 仍在生效', 'warning');
+                log('  3. 图片URL无效或加载慢', 'warning');
+                
+            } catch (error) {
+                log(`测试失败: ${error.message}`, 'error');
+            }
+        };
+
+        // 自动运行诊断
+        log('页面加载完成，准备诊断...', 'info');
+        setTimeout(() => runDiagnostics(), 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Handling Test - GIIP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/error-handling.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0B4D3E',
+                        'primary': '#1B5E20',
+                        'primary-light': '#2E7D32',
+                        'accent': '#E63946',
+                        'light': '#C8E6C9',
+                        'dark-gray': '#333333',
+                        'text': '#424242',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-dark-gray mb-8">Error Handling & Loading States Test</h1>
+        
+        <!-- Test Controls -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Test Controls</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button onclick="testNetworkError()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                    Network Error
+                </button>
+                <button onclick="testAuthError()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+                    Auth Error
+                </button>
+                <button onclick="testNotFoundError()" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+                    Not Found Error
+                </button>
+                <button onclick="testApiError()" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+                    API Error
+                </button>
+                <button onclick="testLoadingState()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Loading State
+                </button>
+                <button onclick="testEmptyState()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                    Empty State
+                </button>
+                <button onclick="testSuccessMessage()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    Success Message
+                </button>
+                <button onclick="testInlineError()" class="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600">
+                    Inline Error
+                </button>
+                <button onclick="testToastSuccess()" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600">
+                    Toast Success
+                </button>
+                <button onclick="testToastError()" class="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800">
+                    Toast Error
+                </button>
+                <button onclick="testToastWarning()" class="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600">
+                    Toast Warning
+                </button>
+                <button onclick="testButtonLoading()" class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600">
+                    Button Loading
+                </button>
+            </div>
+        </div>
+        
+        <!-- Test Container -->
+        <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Test Display Area</h2>
+            <div id="test-container" class="min-h-[300px]">
+                <p class="text-gray-500 text-center py-12">Click a button above to test error handling</p>
+            </div>
+        </div>
+        
+        <!-- Inline Error Test Container -->
+        <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Inline Error Test Area</h2>
+            <div id="inline-error-container"></div>
+            <form class="mt-4">
+                <input type="text" placeholder="Test input" class="w-full px-4 py-2 border rounded mb-4">
+                <button id="test-submit-btn" type="button" class="bg-primary text-white px-6 py-2 rounded hover:bg-primary-dark">
+                    Test Submit Button
+                </button>
+            </form>
+        </div>
+        
+        <!-- Error Types Reference -->
+        <div class="bg-white rounded-lg shadow-md p-8">
+            <h2 class="text-xl font-semibold mb-4">Error Types Reference</h2>
+            <div class="space-y-4">
+                <div class="border-l-4 border-red-500 pl-4">
+                    <h3 class="font-semibold">Network Error</h3>
+                    <p class="text-sm text-gray-600">Connection issues, failed fetch requests</p>
+                </div>
+                <div class="border-l-4 border-yellow-500 pl-4">
+                    <h3 class="font-semibold">Authentication Error</h3>
+                    <p class="text-sm text-gray-600">401/403 status codes, login required</p>
+                </div>
+                <div class="border-l-4 border-orange-500 pl-4">
+                    <h3 class="font-semibold">Not Found Error</h3>
+                    <p class="text-sm text-gray-600">404 status code, resource not found</p>
+                </div>
+                <div class="border-l-4 border-purple-500 pl-4">
+                    <h3 class="font-semibold">API Error</h3>
+                    <p class="text-sm text-gray-600">Server errors, 4xx/5xx status codes</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { ErrorHandler, LoadingState, EmptyState, Toast, ErrorType } from './js/utils/error-handler.js';
+        
+        const container = document.getElementById('test-container');
+        const inlineContainer = document.getElementById('inline-error-container');
+        const submitBtn = document.getElementById('test-submit-btn');
+        
+        // Make functions globally available
+        window.testNetworkError = function() {
+            const error = new Error('Failed to fetch');
+            ErrorHandler.showError(container, error, {
+                context: 'loading events',
+                showRetry: true,
+                onRetry: () => {
+                    console.log('Retry clicked');
+                    Toast.show('Retrying...', { type: 'info' });
+                }
+            });
+        };
+        
+        window.testAuthError = function() {
+            const error = new Error('Authentication required');
+            error.status = 401;
+            ErrorHandler.showError(container, error, {
+                context: 'accessing this resource',
+                showRetry: false
+            });
+        };
+        
+        window.testNotFoundError = function() {
+            const error = new Error('Event not found');
+            error.status = 404;
+            ErrorHandler.showError(container, error, {
+                context: 'loading event details',
+                showRetry: true,
+                onRetry: () => {
+                    console.log('Retry clicked');
+                    Toast.show('Retrying...', { type: 'info' });
+                }
+            });
+        };
+        
+        window.testApiError = function() {
+            const error = new Error('Internal server error occurred');
+            error.status = 500;
+            ErrorHandler.showError(container, error, {
+                context: 'processing your request',
+                showRetry: true,
+                onRetry: () => {
+                    console.log('Retry clicked');
+                    Toast.show('Retrying...', { type: 'info' });
+                }
+            });
+        };
+        
+        window.testLoadingState = function() {
+            LoadingState.show(container, {
+                message: 'Loading events...',
+                size: 'large'
+            });
+            
+            // Auto-clear after 3 seconds
+            setTimeout(() => {
+                container.innerHTML = '<p class="text-green-600 text-center py-12">Loading complete!</p>';
+            }, 3000);
+        };
+        
+        window.testEmptyState = function() {
+            EmptyState.show(container, {
+                icon: 'fas fa-calendar-times',
+                title: 'No Upcoming Events',
+                message: 'Check back soon for new events and opportunities',
+                actionText: 'Refresh',
+                onAction: () => {
+                    console.log('Action clicked');
+                    Toast.show('Refreshing...', { type: 'info' });
+                }
+            });
+        };
+        
+        window.testSuccessMessage = function() {
+            ErrorHandler.showSuccess(container, 'Your registration has been submitted successfully!', {
+                title: 'Registration Successful',
+                icon: 'fas fa-check-circle'
+            });
+        };
+        
+        window.testInlineError = function() {
+            ErrorHandler.showInlineError(inlineContainer, 'Please enter a valid email address');
+        };
+        
+        window.testToastSuccess = function() {
+            Toast.show('Operation completed successfully!', { type: 'success', duration: 3000 });
+        };
+        
+        window.testToastError = function() {
+            Toast.show('An error occurred while processing your request', { type: 'error', duration: 3000 });
+        };
+        
+        window.testToastWarning = function() {
+            Toast.show('Please review your input before submitting', { type: 'warning', duration: 3000 });
+        };
+        
+        window.testButtonLoading = function() {
+            LoadingState.showButtonLoading(submitBtn, 'Processing...');
+            
+            // Auto-restore after 3 seconds
+            setTimeout(() => {
+                LoadingState.hideButtonLoading(submitBtn);
+                Toast.show('Button loading test complete!', { type: 'success' });
+            }, 3000);
+        };
+        
+        console.log('Error handling test page loaded successfully');
+    </script>
+</body>
+</html>

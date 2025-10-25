@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Event Details - Global Innovation and Intellectual Property (GIIP)">
+    <meta name="keywords" content="intellectual property, innovation, GIIP, events, conferences">
+    <title id="page-title">Event Details - GIIP</title>
+    <link rel="canonical" href="https://giip.info/event-detail.html">
+    <link rel="icon" type="image/png" href="images/giip-logo.png">
+    <link rel="apple-touch-icon" href="images/giip-logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/typography.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/event-card.css">
+    <link rel="stylesheet" href="css/event-detail.css">
+    <link rel="stylesheet" href="css/error-handling.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0B4D3E',
+                        'primary': '#1B5E20',
+                        'primary-light': '#2E7D32',
+                        'accent': '#E63946',
+                        'light': '#C8E6C9',
+                        'dark-gray': '#333333',
+                        'text': '#424242',
+                    },
+                    fontFamily: {
+                        'sans': ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px 12px;
+            z-index: 110;
+        }
+
+        .nav-links {
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #mobile-nav-drawer.active {
+            left: 0 !important;
+        }
+
+        .menu-overlay.active {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        a:focus,
+        button:focus {
+            outline: 3px solid #E63946;
+            outline-offset: 2px;
+        }
+
+        .skip-to-main {
+            position: absolute;
+            left: -9999px;
+            z-index: 999;
+            padding: 1em;
+            background-color: #E63946;
+            color: white;
+            text-decoration: none;
+        }
+
+        .skip-to-main:focus {
+            left: 50%;
+            transform: translateX(-50%);
+            top: 10px;
+        }
+
+        /* Large date badge for hero section */
+        .event-date-badge-large {
+            flex-shrink: 0;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(255, 140, 66, 0.3);
+        }
+
+        .event-date-badge-large .badge-year {
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        .event-date-badge-large .badge-date {
+            font-size: 1.5rem;
+            line-height: 1;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+                font-size: 16px;
+                line-height: 1.6;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 85%;
+                max-width: 320px;
+                height: 100vh;
+                background-color: var(--primary-dark);
+                flex-direction: column;
+                padding: 80px 25px 30px;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+                z-index: 105;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links li {
+                margin: 0 0 12px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .nav-links li:last-child {
+                border-bottom: none;
+            }
+
+            .menu-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 104;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .menu-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .event-date-badge-large {
+                width: 80px;
+                height: 80px;
+            }
+
+            .event-date-badge-large .badge-year {
+                font-size: 0.875rem;
+            }
+
+            .event-date-badge-large .badge-date {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="font-sans text-text bg-white">
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-to-main">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="bg-primary-dark sticky top-0 z-[100] shadow-lg" role="banner">
+        <div class="container mx-auto px-5 max-w-[1200px]">
+            <nav class="flex justify-between items-center py-[15px]" role="navigation" aria-label="Main navigation">
+                <a href="index.html" class="flex items-center">
+                    <img src="images/giip-logo.png" alt="GIIP Logo" class="h-10 mr-2.5">
+                    <div class="text-white text-[22px] font-bold tracking-wide">GIIP</div>
+                </a>
+                <div class="hidden md:flex items-center">
+                    <ul class="nav-links flex list-none">
+                        <li class="ml-[30px]"><a href="index.html"
+                                class="text-white no-underline font-medium text-base transition-all duration-300 relative py-1.5 hover:text-accent after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-accent after:transition-all after:duration-300 hover:after:w-full">Home</a>
+                        </li>
+                        <li class="ml-[30px]"><a href="index.html#news"
+                                class="text-white no-underline font-medium text-base transition-all duration-300 relative py-1.5 hover:text-accent after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-accent after:transition-all after:duration-300 hover:after:w-full">News</a>
+                        </li>
+                        <li class="ml-[30px]"><a href="index.html#events"
+                                class="text-white no-underline font-medium text-base transition-all duration-300 relative py-1.5 hover:text-accent after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-accent after:transition-all after:duration-300 hover:after:w-full">Events</a>
+                        </li>
+                        <li class="ml-[30px]"><a href="index.html#past-conferences"
+                                class="text-white no-underline font-medium text-base transition-all duration-300 relative py-1.5 hover:text-accent after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-accent after:transition-all after:duration-300 hover:after:w-full">Conferences</a>
+                        </li>
+                        <li class="ml-[30px]"><a href="index.html#highlights"
+                                class="text-white no-underline font-medium text-base transition-all duration-300 relative py-1.5 hover:text-accent after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-accent after:transition-all after:duration-300 hover:after:w-full">Highlights</a>
+                        </li>
+                        <li class="ml-[30px]"><a href="about.html"
+                                class="text-white no-underline font-medium text-base transition-all duration-300 relative py-1.5 hover:text-accent after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-accent after:transition-all after:duration-300 hover:after:w-full">About</a>
+                        </li>
+                        <li class="ml-[30px]"><a href="contact.html"
+                                class="text-white no-underline font-medium text-base transition-all duration-300 relative py-1.5 hover:text-accent after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-accent after:transition-all after:duration-300 hover:after:w-full">Contact</a>
+                        </li>
+                    </ul>
+                    <!-- User Menu (Desktop) -->
+                    <div class="auth-links ml-[40px] relative">
+                        <!-- Logged Out State -->
+                        <div id="auth-logged-out" class="flex items-center gap-3">
+                            <a href="index.html#login"
+                                class="text-white no-underline font-medium text-base transition-all duration-300 py-2 px-4 border border-white/30 rounded-md hover:bg-white hover:text-primary-dark"
+                                aria-label="Login to your account">Login</a>
+                            <a href="index.html#register"
+                                class="bg-accent text-white no-underline font-medium text-base transition-all duration-300 py-2 px-4 rounded-md hover:bg-accent/90 hover:-translate-y-0.5"
+                                aria-label="Create new account">Register</a>
+                        </div>
+                        
+                        <!-- Logged In State (Hidden by default) -->
+                        <div id="auth-logged-in" class="hidden">
+                            <button id="user-menu-button" class="flex items-center gap-2 text-white hover:opacity-80 transition-opacity" aria-label="User menu" aria-expanded="false">
+                                <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center font-semibold text-white">
+                                    <span id="user-avatar-text">A</span>
+                                </div>
+                                <span id="user-email" class="text-sm font-medium">admin@giip.info</span>
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            
+                            <!-- Dropdown Menu -->
+                            <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50">
+                                <div class="px-4 py-3 border-b border-gray-200">
+                                    <p class="text-sm text-gray-500">Signed in as</p>
+                                    <p id="dropdown-email" class="text-sm font-semibold text-gray-900 truncate">admin@giip.info</p>
+                                    <p id="dropdown-role" class="text-xs text-gray-500">(Admin)</p>
+                                </div>
+                                <a href="admin.html" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                                    <i class="fas fa-cog text-gray-400"></i>
+                                    <span>Admin Dashboard</span>
+                                </a>
+                                <button id="logout-button" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                    <i class="fas fa-sign-out-alt text-red-400"></i>
+                                    <span>Logout</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mobile Menu Button -->
+                <button
+                    class="mobile-menu-btn md:hidden bg-transparent border-none text-white text-2xl cursor-pointer px-2.5 py-1.5 z-[110]"
+                    aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav-drawer">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="menu-overlay fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-[104] opacity-0 invisible transition-all duration-300"
+        aria-hidden="true"></div>
+
+    <!-- Mobile Navigation Drawer -->
+    <nav id="mobile-nav-drawer"
+        class="nav-links md:hidden fixed top-0 -left-full w-[85%] max-w-[320px] h-screen bg-primary-dark flex-col pt-20 px-[25px] pb-[30px] shadow-[2px_0_15px_rgba(0,0,0,0.2)] z-[105]"
+        aria-label="Mobile navigation" role="navigation">
+        <ul class="list-none">
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0"><a href="index.html"
+                    class="text-white no-underline block text-[16px] !leading-[11.2px] py-[10px] px-3">Home</a></li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0"><a href="index.html#news"
+                    class="text-white no-underline block text-[16px] !leading-[11.2px] py-[10px] px-3">News</a></li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0"><a href="index.html#events"
+                    class="text-white no-underline block text-[16px] !leading-[11.2px] py-[10px] px-3">Upcoming
+                    Events</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0"><a href="index.html#past-conferences"
+                    class="text-white no-underline block text-[16px] !leading-[11.2px] py-[10px] px-3">Past
+                    Conferences</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0"><a href="index.html#highlights"
+                    class="text-white no-underline block text-[16px] !leading-[11.2px] py-[10px] px-3">Highlights</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0"><a href="about.html"
+                    class="text-white no-underline block text-[16px] !leading-[11.2px] py-[10px] px-3">About Us</a></li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0"><a href="contact.html"
+                    class="text-white no-underline block text-[16px] !leading-[11.2px] py-[10px] px-3">Contact Us</a>
+            </li>
+        </ul>
+        <div class="auth-links-mobile mt-6 pt-6 border-t border-white/10">
+            <a href="index.html#login"
+                class="text-white no-underline block text-[16px] !leading-[11.2px] py-[10px] px-3 mb-3 border border-white/30 rounded-md text-center transition-all duration-300 hover:bg-white hover:text-primary-dark"
+                aria-label="Login to your account">Login</a>
+            <a href="index.html#register"
+                class="bg-accent text-white no-underline block text-[16px] !leading-[11.2px] py-[10px] px-3 rounded-md text-center transition-all duration-300 hover:bg-accent/90"
+                aria-label="Create new account">Register</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content" role="main">
+
+        <!-- Event Hero Section -->
+        <section class="event-hero-section bg-gradient-to-br from-primary-dark to-primary">
+            <div class="container mx-auto px-6 max-w-[1200px]">
+                <div class="event-hero-content text-white">
+                    <div class="event-date-badge-large">
+                        <span class="badge-year" id="hero-year">2025</span>
+                        <span class="badge-date" id="hero-date">Jun.13</span>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <h1 id="event-title" class="font-bold mb-2"></h1>
+                        <div class="flex items-center gap-4 text-lg flex-wrap justify-center md:justify-start">
+                            <span id="event-time"><i class="far fa-clock mr-2"></i></span>
+                            <span id="event-location"><i class="fas fa-map-marker-alt mr-2"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Event Content -->
+        <section class="py-12 bg-gray-50">
+            <div class="container mx-auto px-6 max-w-[1200px]">
+                <div class="event-content-grid">
+                    <!-- Main Content -->
+                    <div class="event-main-content">
+                        <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+                            <h2 class="text-2xl font-semibold mb-4 text-dark-gray">About This Event</h2>
+                            <div id="event-description" class="prose max-w-none text-text"></div>
+                        </div>
+                        
+                        <!-- Registration Form (Auth-gated) -->
+                        <div id="registration-section" class="bg-white rounded-lg shadow-md p-8 hidden">
+                            <h2 class="text-2xl font-semibold mb-6 text-dark-gray">Register for This Event</h2>
+                            <form id="registration-form" class="registration-form">
+                                <div class="form-grid grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2 text-dark-gray">Full Name</label>
+                                        <input type="text" id="reg-name" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary" readonly>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2 text-dark-gray">Email</label>
+                                        <input type="email" id="reg-email" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary" readonly>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium mb-2 text-dark-gray">Organization</label>
+                                    <input type="text" id="reg-organization" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Your organization name">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium mb-2 text-dark-gray">Additional Notes</label>
+                                    <textarea id="reg-notes" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Any special requirements or questions?"></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3 rounded transition">
+                                    Submit Registration
+                                </button>
+                            </form>
+                            <div id="registration-success" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <div class="flex items-center gap-2 text-green-800">
+                                    <i class="fas fa-check-circle text-xl"></i>
+                                    <span class="font-semibold">Registration Successful!</span>
+                                </div>
+                                <p class="text-green-700 mt-2">You have successfully registered for this event. A confirmation email has been sent to your email address.</p>
+                            </div>
+                            <div id="registration-error" class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                                <div class="flex items-center gap-2 text-red-800">
+                                    <i class="fas fa-exclamation-circle text-xl"></i>
+                                    <span class="font-semibold">Registration Failed</span>
+                                </div>
+                                <p id="registration-error-message" class="text-red-700 mt-2"></p>
+                            </div>
+                        </div>
+                        
+                        <!-- Auth Required Message (for non-logged-in users) -->
+                        <div id="auth-required" class="bg-white rounded-lg shadow-md p-8 hidden">
+                            <div class="text-center">
+                                <i class="fas fa-lock text-6xl text-gray-400 mb-4"></i>
+                                <h3 class="text-xl font-semibold mb-2 text-dark-gray">Registration Required</h3>
+                                <p class="text-text mb-6">Please log in or create an account to register for this event</p>
+                                <div class="auth-buttons flex gap-4 justify-center flex-wrap">
+                                    <button id="show-login" class="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded transition">
+                                        Log In
+                                    </button>
+                                    <button id="show-register" class="bg-accent hover:bg-red-700 text-white px-6 py-3 rounded transition">
+                                        Create Account
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sidebar -->
+                    <div class="event-sidebar">
+                        <div class="event-details-card bg-white rounded-lg shadow-md p-6 mb-6">
+                            <h3 class="text-lg font-semibold mb-4 text-dark-gray">Event Details</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <span class="text-sm font-medium text-gray-600">Date</span>
+                                    <p id="sidebar-date" class="text-dark-gray"></p>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-600">Time</span>
+                                    <p id="sidebar-time" class="text-dark-gray"></p>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-600">Location</span>
+                                    <p id="sidebar-location" class="text-dark-gray"></p>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-600">Capacity</span>
+                                    <p id="sidebar-capacity" class="text-dark-gray"></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Related Events -->
+                        <div class="related-events bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-lg font-semibold mb-4 text-dark-gray">Related Events</h3>
+                            <div id="related-events" class="space-y-4">
+                                <!-- Related event cards will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Auth Modals -->
+    <div id="auth-modal-container"></div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/event-detail.js"></script>
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileNavDrawer = document.getElementById('mobile-nav-drawer');
+            const menuOverlay = document.querySelector('.menu-overlay');
+
+            if (mobileMenuBtn && mobileNavDrawer && menuOverlay) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    const isActive = mobileNavDrawer.classList.contains('active');
+                    
+                    if (isActive) {
+                        mobileNavDrawer.classList.remove('active');
+                        menuOverlay.classList.remove('active');
+                        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                    } else {
+                        mobileNavDrawer.classList.add('active');
+                        menuOverlay.classList.add('active');
+                        mobileMenuBtn.setAttribute('aria-expanded', 'true');
+                    }
+                });
+
+                menuOverlay.addEventListener('click', function() {
+                    mobileNavDrawer.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        button {
+            background: #0B4D3E;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1B5E20;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Dashboard Test</h1>
+    
+    <div class="test-section">
+        <h2>Step 1: Login</h2>
+        <input type="email" id="email" value="admin@giip.info" placeholder="Email">
+        <input type="password" id="password" value="admin123" placeholder="Password">
+        <button onclick="testLogin()">Login</button>
+        <div id="loginResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Step 2: Test API Calls</h2>
+        <button onclick="testNews()">Test News API</button>
+        <button onclick="testEvents()">Test Events API</button>
+        <button onclick="testConferences()">Test Conferences API</button>
+        <button onclick="testUsers()">Test Users API</button>
+        <div id="apiResults"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Step 3: Test Dashboard Load</h2>
+        <button onclick="testDashboard()">Load Dashboard Data</button>
+        <div id="dashboardResults"></div>
+    </div>
+
+    <script type="module">
+        import { AuthAPI, NewsAPI, EventsAPI, ConferencesAPI, AdminAPI } from './frontend/js/api-client.js';
+        
+        window.testLogin = async function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('loginResult');
+            
+            try {
+                const response = await AuthAPI.login({ email, password });
+                localStorage.setItem('user', JSON.stringify(response.user));
+                resultDiv.innerHTML = `<p class="success">✅ Login successful!</p><pre>${JSON.stringify(response, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">❌ Login failed: ${error.message}</p>`;
+            }
+        };
+        
+        window.testNews = async function() {
+            const resultDiv = document.getElementById('apiResults');
+            try {
+                const response = await NewsAPI.getAll();
+                resultDiv.innerHTML = `<h3 class="success">✅ News API</h3><pre>${JSON.stringify(response, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<h3 class="error">❌ News API Failed</h3><pre>${error.message}</pre>`;
+            }
+        };
+        
+        window.testEvents = async function() {
+            const resultDiv = document.getElementById('apiResults');
+            try {
+                const response = await EventsAPI.getAll();
+                resultDiv.innerHTML = `<h3 class="success">✅ Events API</h3><pre>${JSON.stringify(response, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<h3 class="error">❌ Events API Failed</h3><pre>${error.message}</pre>`;
+            }
+        };
+        
+        window.testConferences = async function() {
+            const resultDiv = document.getElementById('apiResults');
+            try {
+                const response = await ConferencesAPI.getAll();
+                resultDiv.innerHTML = `<h3 class="success">✅ Conferences API</h3><pre>${JSON.stringify(response, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<h3 class="error">❌ Conferences API Failed</h3><pre>${error.message}</pre>`;
+            }
+        };
+        
+        window.testUsers = async function() {
+            const resultDiv = document.getElementById('apiResults');
+            try {
+                const response = await AdminAPI.getUsers();
+                resultDiv.innerHTML = `<h3 class="success">✅ Users API</h3><pre>${JSON.stringify(response, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<h3 class="error">❌ Users API Failed</h3><pre>${error.message}</pre>`;
+            }
+        };
+        
+        window.testDashboard = async function() {
+            const resultDiv = document.getElementById('dashboardResults');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            try {
+                const [news, events, conferences, users] = await Promise.all([
+                    NewsAPI.getAll(),
+                    EventsAPI.getAll(),
+                    ConferencesAPI.getAll(),
+                    user.role === 'admin' ? AdminAPI.getUsers() : Promise.resolve({ success: true, data: [] })
+                ]);
+                
+                const counts = {
+                    news: news.data?.length || 0,
+                    events: events.data?.length || 0,
+                    conferences: conferences.data?.length || 0,
+                    users: users.data?.length || 0
+                };
+                
+                resultDiv.innerHTML = `
+                    <h3 class="success">✅ Dashboard Data Loaded</h3>
+                    <pre>${JSON.stringify(counts, null, 2)}</pre>
+                    <h4>Full Response:</h4>
+                    <pre>${JSON.stringify({ news, events, conferences, users }, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<h3 class="error">❌ Dashboard Load Failed</h3><pre>${error.message}\n${error.stack}</pre>`;
+            }
+        };
+    </script>
+</body>
+</html>

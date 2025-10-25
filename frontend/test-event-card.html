@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Card Component Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/event-card.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: #f5f5f5;
+            padding: 2rem;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="text-3xl font-bold mb-8 text-center">Event Card Component Test</h1>
+        
+        <div class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Single Event Card</h2>
+            <div id="single-card-container"></div>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Multiple Event Cards (Grid Layout)</h2>
+            <div id="grid-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Empty State</h2>
+            <div id="empty-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { EventCard, renderEventCards } from './js/components/event-card.js';
+
+        // Test data
+        const sampleEvents = [
+            {
+                id: 1,
+                title: "Information Management and Business Intelligence Lecture",
+                description: "Artificial Intelligence, Information, and Organizational Innovation - A comprehensive exploration of how AI is transforming modern business practices and organizational structures.",
+                start_date: "2025-06-13T09:00:00Z",
+                location: "Conference Hall A"
+            },
+            {
+                id: 2,
+                title: "Global IP Policy Summit 2025",
+                description: "Join leading experts in intellectual property law and policy for discussions on emerging trends and challenges in the global IP landscape.",
+                start_date: "2025-07-20T10:00:00Z",
+                location: "Virtual Event"
+            },
+            {
+                id: 3,
+                title: "Innovation Workshop Series",
+                description: "Hands-on workshop exploring practical innovation methodologies and tools for researchers and practitioners.",
+                start_date: "2025-08-15T14:00:00Z",
+                location: "Innovation Lab"
+            },
+            {
+                id: 4,
+                title: "Patent Law Symposium",
+                description: "An in-depth examination of recent developments in patent law and their implications for technology companies.",
+                start_date: "2025-09-05T09:30:00Z",
+                location: "Law School Auditorium"
+            }
+        ];
+
+        // Test 1: Single card
+        const singleCard = new EventCard(sampleEvents[0]);
+        const singleContainer = document.getElementById('single-card-container');
+        singleContainer.innerHTML = singleCard.render();
+        const singleCardElement = singleContainer.querySelector('.event-card');
+        singleCard.attachEventListeners(singleCardElement, (id) => {
+            alert(`Clicked event ID: ${id}`);
+        });
+
+        // Test 2: Multiple cards with grid
+        const gridContainer = document.getElementById('grid-container');
+        renderEventCards(sampleEvents, gridContainer, (id) => {
+            console.log(`Navigating to event ${id}`);
+            alert(`Would navigate to event detail page for event ID: ${id}`);
+        });
+
+        // Test 3: Empty state
+        const emptyContainer = document.getElementById('empty-container');
+        renderEventCards([], emptyContainer, null);
+
+        console.log('Event Card Component Test loaded successfully!');
+        console.log('Sample event data:', sampleEvents);
+    </script>
+</body>
+</html>

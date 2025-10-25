@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Menu Docker Test - GIIP</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0B4D3E;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #1B5E20;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #E63946;
+            padding-bottom: 10px;
+        }
+        .test-item {
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #E63946;
+            background: #f9f9f9;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status.pass {
+            background: #4CAF50;
+            color: white;
+        }
+        .status.fail {
+            background: #f44336;
+            color: white;
+        }
+        .status.pending {
+            background: #FF9800;
+            color: white;
+        }
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        button {
+            background: #E63946;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #d32f3e;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .result.success {
+            background: #e8f5e9;
+            border: 1px solid #4CAF50;
+        }
+        .result.error {
+            background: #ffebee;
+            border: 1px solid #f44336;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔍 Mobile Menu Docker Verification</h1>
+        <p>This page tests if the mobile menu typography updates are properly loaded through Docker and Nginx.</p>
+    </div>
+
+    <div class="test-container">
+        <h2>1. Docker Container Status</h2>
+        <div class="test-item">
+            <strong>Frontend Container:</strong>
+            <span class="status pending" id="frontend-status">Testing...</span>
+            <div id="frontend-result" class="result" style="display:none;"></div>
+        </div>
+        <div class="test-item">
+            <strong>Backend Container:</strong>
+            <span class="status pending" id="backend-status">Testing...</span>
+            <div id="backend-result" class="result" style="display:none;"></div>
+        </div>
+        <button onclick="testContainers()">Test Containers</button>
+    </div>
+
+    <div class="test-container">
+        <h2>2. Mobile Menu Typography</h2>
+        <div class="test-item">
+            <strong>Menu Button Size:</strong>
+            <span class="status pending" id="button-size-status">Not Tested</span>
+            <div id="button-size-result"></div>
+        </div>
+        <div class="test-item">
+            <strong>Menu Text Size:</strong>
+            <span class="status pending" id="text-size-status">Not Tested</span>
+            <div id="text-size-result"></div>
+        </div>
+        <div class="test-item">
+            <strong>Line Height:</strong>
+            <span class="status pending" id="line-height-status">Not Tested</span>
+            <div id="line-height-result"></div>
+        </div>
+        <div class="test-item">
+            <strong>Font Family:</strong>
+            <span class="status pending" id="font-family-status">Not Tested</span>
+            <div id="font-family-result"></div>
+        </div>
+        <button onclick="testTypography()">Test Typography</button>
+    </div>
+
+    <div class="test-container">
+        <h2>3. Nginx Configuration</h2>
+        <div class="test-item">
+            <strong>Gzip Compression:</strong>
+            <span class="status pending" id="gzip-status">Not Tested</span>
+            <div id="gzip-result"></div>
+        </div>
+        <div class="test-item">
+            <strong>Cache Headers:</strong>
+            <span class="status pending" id="cache-status">Not Tested</span>
+            <div id="cache-result"></div>
+        </div>
+        <button onclick="testNginx()">Test Nginx</button>
+    </div>
+
+    <div class="test-container">
+        <h2>4. Live Preview</h2>
+        <p>View the actual mobile menu in an iframe:</p>
+        <button onclick="loadPreview()">Load Preview</button>
+        <div id="preview-container"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>5. Manual Verification Steps</h2>
+        <div class="code">
+# 1. Check if containers are running
+docker ps --filter "name=giip"
+
+# 2. Rebuild containers with latest changes
+docker-compose down
+docker-compose build --no-cache web
+docker-compose up -d
+
+# 3. View frontend logs
+docker-compose logs -f web
+
+# 4. Test frontend health
+curl http://localhost/health
+
+# 5. Inspect mobile menu in browser
+# Open DevTools (F12) → Toggle device toolbar (Ctrl+Shift+M)
+# Select mobile device → Click hamburger menu
+# Inspect element to verify:
+#   - Button font-size: 20px
+#   - Menu text font-size: 16px
+#   - Line height: 1.6
+        </div>
+    </div>
+
+    <script>
+        async function testContainers() {
+            // Test frontend
+            try {
+                const frontendResponse = await fetch('/health');
+                const frontendText = await frontendResponse.text();
+                document.getElementById('frontend-status').className = 'status pass';
+                document.getElementById('frontend-status').textContent = 'Running';
+                document.getElementById('frontend-result').className = 'result success';
+                document.getElementById('frontend-result').textContent = `Response: ${frontendText}`;
+                document.getElementById('frontend-result').style.display = 'block';
+            } catch (error) {
+                document.getElementById('frontend-status').className = 'status fail';
+                document.getElementById('frontend-status').textContent = 'Failed';
+                document.getElementById('frontend-result').className = 'result error';
+                document.getElementById('frontend-result').textContent = `Error: ${error.message}`;
+                document.getElementById('frontend-result').style.display = 'block';
+            }
+
+            // Test backend
+            try {
+                const backendResponse = await fetch('http://localhost:3000/api/health');
+                const backendData = await backendResponse.json();
+                document.getElementById('backend-status').className = 'status pass';
+                document.getElementById('backend-status').textContent = 'Running';
+                document.getElementById('backend-result').className = 'result success';
+                document.getElementById('backend-result').textContent = `Response: ${JSON.stringify(backendData)}`;
+                document.getElementById('backend-result').style.display = 'block';
+            } catch (error) {
+                document.getElementById('backend-status').className = 'status fail';
+                document.getElementById('backend-status').textContent = 'Failed';
+                document.getElementById('backend-result').className = 'result error';
+                document.getElementById('backend-result').textContent = `Error: ${error.message}`;
+                document.getElementById('backend-result').style.display = 'block';
+            }
+        }
+
+        async function testTypography() {
+            try {
+                const response = await fetch('/index.html');
+                const html = await response.text();
+
+                // Test button size
+                const hasButtonSize = html.includes('font-size: 20px');
+                document.getElementById('button-size-status').className = hasButtonSize ? 'status pass' : 'status fail';
+                document.getElementById('button-size-status').textContent = hasButtonSize ? 'Pass' : 'Fail';
+                document.getElementById('button-size-result').textContent = hasButtonSize ? 
+                    '✓ Button size is 20px' : '✗ Button size not found (expected 20px)';
+
+                // Test text size
+                const hasTextSize = html.includes('font-size: 16px');
+                document.getElementById('text-size-status').className = hasTextSize ? 'status pass' : 'status fail';
+                document.getElementById('text-size-status').textContent = hasTextSize ? 'Pass' : 'Fail';
+                document.getElementById('text-size-result').textContent = hasTextSize ? 
+                    '✓ Menu text size is 16px' : '✗ Menu text size not found (expected 16px)';
+
+                // Test line height
+                const hasLineHeight = html.includes('line-height: 1.6');
+                document.getElementById('line-height-status').className = hasLineHeight ? 'status pass' : 'status fail';
+                document.getElementById('line-height-status').textContent = hasLineHeight ? 'Pass' : 'Fail';
+                document.getElementById('line-height-result').textContent = hasLineHeight ? 
+                    '✓ Line height is 1.6' : '✗ Line height not found (expected 1.6)';
+
+                // Test font family
+                const hasFontFamily = html.includes('-apple-system, BlinkMacSystemFont');
+                document.getElementById('font-family-status').className = hasFontFamily ? 'status pass' : 'status fail';
+                document.getElementById('font-family-status').textContent = hasFontFamily ? 'Pass' : 'Fail';
+                document.getElementById('font-family-result').textContent = hasFontFamily ? 
+                    '✓ System fonts configured' : '✗ System fonts not found';
+
+            } catch (error) {
+                alert('Error testing typography: ' + error.message);
+            }
+        }
+
+        async function testNginx() {
+            try {
+                const response = await fetch('/index.html');
+                const headers = response.headers;
+
+                // Test gzip
+                const hasGzip = headers.get('content-encoding') === 'gzip';
+                document.getElementById('gzip-status').className = hasGzip ? 'status pass' : 'status fail';
+                document.getElementById('gzip-status').textContent = hasGzip ? 'Enabled' : 'Disabled';
+                document.getElementById('gzip-result').textContent = hasGzip ? 
+                    '✓ Gzip compression is enabled' : '✗ Gzip compression not detected';
+
+                // Test cache headers
+                const cacheControl = headers.get('cache-control');
+                const hasCache = cacheControl !== null;
+                document.getElementById('cache-status').className = hasCache ? 'status pass' : 'status fail';
+                document.getElementById('cache-status').textContent = hasCache ? 'Configured' : 'Not Found';
+                document.getElementById('cache-result').textContent = hasCache ? 
+                    `✓ Cache-Control: ${cacheControl}` : '✗ Cache headers not found';
+
+            } catch (error) {
+                alert('Error testing Nginx: ' + error.message);
+            }
+        }
+
+        function loadPreview() {
+            const container = document.getElementById('preview-container');
+            container.innerHTML = '<iframe src="/index.html"></iframe>';
+        }
+
+        // Auto-run tests on page load
+        window.addEventListener('load', () => {
+            testContainers();
+            testTypography();
+            testNginx();
+        });
+    </script>
+</body>
+</html>

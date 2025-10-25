@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard Diagnostics</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-result {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #0B4D3E;
+        }
+        .success { border-left-color: #4CAF50; }
+        .error { border-left-color: #f44336; }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Dashboard Diagnostics</h1>
+    <div id="results"></div>
+
+    <script type="module">
+        const results = document.getElementById('results');
+        
+        function addResult(title, success, data) {
+            const div = document.createElement('div');
+            div.className = `test-result ${success ? 'success' : 'error'}`;
+            div.innerHTML = `
+                <h3>${success ? '✅' : '❌'} ${title}</h3>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+            results.appendChild(div);
+        }
+
+        async function runDiagnostics() {
+            // Test 1: Check if api-client.js loads
+            try {
+                const { NewsAPI, EventsAPI, ConferencesAPI, AdminAPI, AuthAPI } = await import('./frontend/js/api-client.js');
+                addResult('API Client Module Loaded', true, { message: 'All API modules imported successfully' });
+                
+                // Test 2: Check localStorage
+                const token = localStorage.getItem('authToken');
+                const user = localStorage.getItem('user');
+                addResult('LocalStorage Check', !!token, {
+                    hasToken: !!token,
+                    hasUser: !!user,
+                    user: user ? JSON.parse(user) : null
+                });
+                
+                // Test 3: Try to fetch news
+                try {
+                    const newsResponse = await NewsAPI.getAll();
+                    addResult('News API Call', true, {
+                        success: newsResponse.success,
+                        count: newsResponse.data?.length || 0,
+                        sample: newsResponse.data?.[0]
+                    });
+                } catch (error) {
+                    addResult('News API Call', false, {
+                        error: error.message,
+                        stack: error.stack
+                    });
+                }
+                
+                // Test 4: Try to fetch events
+                try {
+                    const eventsResponse = await EventsAPI.getAll();
+                    addResult('Events API Call', true, {
+                        success: eventsResponse.success,
+                        count: eventsResponse.data?.length || 0,
+                        sample: eventsResponse.data?.[0]
+                    });
+                } catch (error) {
+                    addResult('Events API Call', false, {
+                        error: error.message,
+                        stack: error.stack
+                    });
+                }
+                
+                // Test 5: Try to fetch conferences
+                try {
+                    const conferencesResponse = await ConferencesAPI.getAll();
+                    addResult('Conferences API Call', true, {
+                        success: conferencesResponse.success,
+                        count: conferencesResponse.data?.length || 0,
+                        sample: conferencesResponse.data?.[0]
+                    });
+                } catch (error) {
+                    addResult('Conferences API Call', false, {
+                        error: error.message,
+                        stack: error.stack
+                    });
+                }
+                
+                // Test 6: If logged in, try admin API
+                if (token) {
+                    try {
+                        const usersResponse = await AdminAPI.getUsers();
+                        addResult('Admin API Call', true, {
+                            success: usersResponse.success,
+                            count: usersResponse.data?.length || 0
+                        });
+                    } catch (error) {
+                        addResult('Admin API Call', false, {
+                            error: error.message,
+                            stack: error.stack
+                        });
+                    }
+                }
+                
+            } catch (error) {
+                addResult('API Client Module Load', false, {
+                    error: error.message,
+                    stack: error.stack
+                });
+            }
+        }
+
+        runDiagnostics();
+    </script>
+</body>
+</html>

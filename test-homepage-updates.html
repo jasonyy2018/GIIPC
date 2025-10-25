@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页更新测试 - GIIP</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1B4D89;
+            border-bottom: 3px solid #FF8C42;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            border-radius: 4px;
+        }
+        .checklist li::before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .code-block {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #1B4D89;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .link-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #1B4D89;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 10px 10px 10px 0;
+            transition: background 0.3s;
+        }
+        .link-button:hover {
+            background: #153a6b;
+        }
+        .link-button.secondary {
+            background: #FF8C42;
+        }
+        .link-button.secondary:hover {
+            background: #e67a32;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎉 首页更新完成 - 测试指南</h1>
+
+    <div class="test-section">
+        <h2>📋 更新内容总结</h2>
+        <ul class="checklist">
+            <li>Past Conferences 改为网格布局（类似 News 部分）</li>
+            <li>Upcoming Events 改为竖排（垂直列表）布局</li>
+            <li>Upcoming Events 卡片高度已恢复正常（最小高度 140px）</li>
+            <li>修复了 Event 详情页面的 404 错误（移除路径前导斜杠）</li>
+            <li>所有 Learn More 链接现在可以正常点击</li>
+            <li>移除了 Past Conferences 的轮播功能</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🔧 修改的文件</h2>
+        <div class="code-block">
+1. frontend/js/data-renderer.js
+   - 修改 ConferencesRenderer.renderCard() 使用网格布局样式
+   - 修改 ConferencesRenderer.render() 移除轮播初始化
+   - 修复 News 和 Conferences 的 Learn More 链接点击问题
+
+2. frontend/css/event-card.css
+   - 添加 .event-card 最小高度 min-height: 140px
+   - 修改 #upcoming-events-grid 为垂直列表布局（flex-direction: column）
+
+3. frontend/index.html
+   - 将 Past Conferences 的 slider 容器改为 grid 布局
+   - 将 Upcoming Events 的 grid 改为 flex 垂直布局
+   - 修复 events.html 链接（移除前导斜杠）
+   - 移除轮播指示器和"View All"按钮
+   - 移除 conferences slider 初始化代码
+
+4. frontend/js/components/event-card.js
+   - 修复 event-detail.html 链接路径（移除前导斜杠）
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>✅ 测试步骤</h2>
+        <ol style="line-height: 2;">
+            <li><strong>启动 Docker 容器</strong>
+                <div class="code-block">docker-compose up -d</div>
+            </li>
+            <li><strong>访问首页</strong>
+                <div class="code-block">http://localhost:3000</div>
+            </li>
+            <li><strong>检查 Past Conferences 部分</strong>
+                <ul>
+                    <li>应该显示为 3 列网格布局（桌面端）</li>
+                    <li>每个会议卡片样式应该与 News 部分一致</li>
+                    <li>卡片有图片、日期、标题和 Learn More 链接</li>
+                    <li>鼠标悬停时卡片有阴影效果</li>
+                </ul>
+            </li>
+            <li><strong>检查 Upcoming Events 部分</strong>
+                <ul>
+                    <li>事件卡片高度应该正常（不会太矮）</li>
+                    <li>每个卡片至少 140px 高度</li>
+                    <li>日期徽章、标题、描述都清晰可见</li>
+                </ul>
+            </li>
+            <li><strong>测试 Learn More 链接</strong>
+                <ul>
+                    <li>点击 News 部分的 Learn More 链接应该跳转</li>
+                    <li>点击 Past Conferences 的 Learn More 链接应该跳转</li>
+                    <li>点击图片或标题也应该跳转</li>
+                </ul>
+            </li>
+            <li><strong>测试响应式布局</strong>
+                <ul>
+                    <li>调整浏览器窗口大小</li>
+                    <li>移动端：Past Conferences 应该是单列</li>
+                    <li>平板端：Past Conferences 应该是 2-3 列</li>
+                    <li>桌面端：Past Conferences 应该是 3 列</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>🎨 预期效果</h2>
+        <h3>Past Conferences 布局（桌面端）</h3>
+        <div class="code-block">
+┌─────────────────────────────────────────────────────────────┐
+│                   Past Conferences                           │
+│    Explore our archive of previous events...                │
+│                                                              │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐                 │
+│  │  [图片]   │  │  [图片]   │  │  [图片]   │                 │
+│  │          │  │          │  │          │                 │
+│  │ 日期      │  │ 日期      │  │ 日期      │                 │
+│  │ 标题      │  │ 标题      │  │ 标题      │                 │
+│  │ Learn More│  │ Learn More│  │ Learn More│                 │
+│  └──────────┘  └──────────┘  └──────────┘                 │
+└─────────────────────────────────────────────────────────────┘
+        </div>
+
+        <h3>Upcoming Events 竖排布局（垂直列表）</h3>
+        <div class="code-block">
+┌─────────────────────────────────────────────────────────────┐
+│                   Upcoming Events                            │
+│    Join us for upcoming lectures...                         │
+│                                                              │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  ⭕ 2025    Event Title 1                          → │  │
+│  │   Jun.13   Event description...                      │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                                                              │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  ⭕ 2025    Event Title 2                          → │  │
+│  │   Jun.03   Event description...                      │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                                                              │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  ⭕ 2025    Event Title 3                          → │  │
+│  │   May.17   Event description...                      │  │
+│  └──────────────────────────────────────────────────────┘  │
+│                                                              │
+│  (每个卡片最小高度: 140px)                                    │
+└─────────────────────────────────────────────────────────────┘
+        </div>
+    </div>
+
+    <div class="success">
+        <strong>✅ 所有更改已完成！</strong><br>
+        现在可以测试首页的新布局和功能了。
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 快速链接</h2>
+        <a href="http://localhost:3000" class="link-button" target="_blank">打开首页</a>
+        <a href="http://localhost:3000/admin.html" class="link-button secondary" target="_blank">管理后台</a>
+    </div>
+
+    <div class="warning">
+        <strong>⚠️ 注意事项：</strong>
+        <ul>
+            <li>确保 Docker 容器正在运行</li>
+            <li>如果看不到更改，请清除浏览器缓存（Ctrl+Shift+R）</li>
+            <li>检查浏览器控制台是否有 JavaScript 错误</li>
+            <li>确保后端 API 正常返回数据</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🐛 如果遇到问题</h2>
+        <ol>
+            <li><strong>Past Conferences 还是轮播样式</strong>
+                <ul>
+                    <li>清除浏览器缓存</li>
+                    <li>检查 data-renderer.js 是否正确加载</li>
+                </ul>
+            </li>
+            <li><strong>Learn More 链接无法点击</strong>
+                <ul>
+                    <li>检查浏览器控制台是否有 JavaScript 错误</li>
+                    <li>确认 event.stopPropagation() 正常工作</li>
+                </ul>
+            </li>
+            <li><strong>Upcoming Events 卡片还是太短</strong>
+                <ul>
+                    <li>检查 event-card.css 是否正确加载</li>
+                    <li>使用浏览器开发工具检查 .event-card 的 min-height 属性</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 技术细节</h2>
+        <h3>Past Conferences 网格布局</h3>
+        <div class="code-block">
+/* HTML 结构 */
+&lt;div class="conferences-slider grid grid-cols-1 md:grid-cols-3 gap-6"&gt;
+    &lt;!-- 会议卡片 --&gt;
+&lt;/div&gt;
+
+/* 响应式断点 */
+- 移动端 (< 768px): 1 列
+- 平板端 (768px - 1023px): 2-3 列
+- 桌面端 (≥ 1024px): 3 列
+        </div>
+
+        <h3>Learn More 链接修复</h3>
+        <div class="code-block">
+/* 之前：整个卡片都有 onclick，导致链接无法点击 */
+&lt;article onclick="..."&gt;
+    &lt;a href="..."&gt;Learn More&lt;/a&gt;
+&lt;/article&gt;
+
+/* 现在：只在图片和标题上有 onclick，链接独立 */
+&lt;article&gt;
+    &lt;div onclick="..."&gt;图片&lt;/div&gt;
+    &lt;h3 onclick="..."&gt;标题&lt;/h3&gt;
+    &lt;a href="..." onclick="event.stopPropagation();"&gt;Learn More&lt;/a&gt;
+&lt;/article&gt;
+        </div>
+
+        <h3>Event Card 最小高度</h3>
+        <div class="code-block">
+.event-card {
+    min-height: 140px;  /* 确保卡片有足够的高度 */
+    display: flex;
+    align-items: center;
+    /* ... 其他样式 ... */
+}
+        </div>
+    </div>
+
+    <div class="success">
+        <strong>🎊 完成！</strong><br>
+        所有更新已经应用，现在可以享受新的首页布局了！
+    </div>
+</body>
+</html>

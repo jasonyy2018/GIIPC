@@ -1,0 +1,106 @@
+/**
+ * Anti-Flicker CSS
+ * Prevents visual flicker during data loading and rendering
+ */
+
+/* Prevent date text flicker - NO transitions */
+.conference-date,
+.news-date,
+.event-date {
+    opacity: 1 !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Prevent image container flicker - solid background, no animations */
+.conference-img,
+.news-img {
+    background-color: #e5e7eb;
+    position: relative;
+}
+
+/* Images should appear immediately, no fade effects */
+.conference-img img,
+.news-img img {
+    opacity: 1 !important;
+    transition: none !important;
+    animation: none !important;
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+/* Prevent text content shift */
+.conference-content,
+.news-content {
+    min-height: 180px;
+}
+
+/* Ensure cards render in one go */
+.conferences-slider,
+.news-slider {
+    opacity: 1;
+    transition: none !important;
+}
+
+/* Prevent hover effects during initial load */
+.conference-card,
+.news-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Disable transitions during page load */
+.loading * {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Smooth fade-in for entire grid after loading */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.conferences-slider.loaded,
+.news-slider.loaded {
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* Prevent FOUC (Flash of Unstyled Content) */
+.conferences-slider:empty,
+.news-slider:empty {
+    min-height: 400px;
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Optimize rendering performance */
+.conference-card,
+.news-card {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+/* Prevent text selection flicker */
+.conference-date,
+.news-date {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}

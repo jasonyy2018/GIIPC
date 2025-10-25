@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admin Data Load</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Data Load Test</h1>
+    
+    <div class="test-section">
+        <h2>Authentication Status</h2>
+        <div id="authStatus"></div>
+        <button onclick="testAuth()">Check Auth</button>
+    </div>
+
+    <div class="test-section">
+        <h2>News API Test</h2>
+        <div id="newsResult"></div>
+        <button onclick="testNews()">Test News API</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Events API Test</h2>
+        <div id="eventsResult"></div>
+        <button onclick="testEvents()">Test Events API</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Conferences API Test</h2>
+        <div id="conferencesResult"></div>
+        <button onclick="testConferences()">Test Conferences API</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Users API Test (Admin Only)</h2>
+        <div id="usersResult"></div>
+        <button onclick="testUsers()">Test Users API</button>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+
+        function getToken() {
+            return localStorage.getItem('authToken');
+        }
+
+        function getUser() {
+            return JSON.parse(localStorage.getItem('user') || 'null');
+        }
+
+        function testAuth() {
+            const token = getToken();
+            const user = getUser();
+            const authDiv = document.getElementById('authStatus');
+            
+            if (token && user) {
+                authDiv.innerHTML = `
+                    <div class="success">
+                        <p><strong>Authenticated</strong></p>
+                        <p>Email: ${user.email}</p>
+                        <p>Role: ${user.role}</p>
+                        <p>Token: ${token.substring(0, 20)}...</p>
+                    </div>
+                `;
+            } else {
+                authDiv.innerHTML = `
+                    <div class="error">
+                        <p><strong>Not Authenticated</strong></p>
+                        <p>Please login first at <a href="/index.html">index.html</a></p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testNews() {
+            const resultDiv = document.getElementById('newsResult');
+            resultDiv.innerHTML = '<p>Loading...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/news`, {
+                    headers: {
+                        'Authorization': `Bearer ${getToken()}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <p><strong>Success!</strong></p>
+                            <p>Status: ${response.status}</p>
+                            <p>Count: ${data.data?.length || 0} items</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <p><strong>Error!</strong></p>
+                            <p>Status: ${response.status}</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <p><strong>Network Error!</strong></p>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testEvents() {
+            const resultDiv = document.getElementById('eventsResult');
+            resultDiv.innerHTML = '<p>Loading...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/events`, {
+                    headers: {
+                        'Authorization': `Bearer ${getToken()}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <p><strong>Success!</strong></p>
+                            <p>Status: ${response.status}</p>
+                            <p>Count: ${data.data?.length || 0} items</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <p><strong>Error!</strong></p>
+                            <p>Status: ${response.status}</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <p><strong>Network Error!</strong></p>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testConferences() {
+            const resultDiv = document.getElementById('conferencesResult');
+            resultDiv.innerHTML = '<p>Loading...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/conferences`, {
+                    headers: {
+                        'Authorization': `Bearer ${getToken()}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <p><strong>Success!</strong></p>
+                            <p>Status: ${response.status}</p>
+                            <p>Count: ${data.data?.length || 0} items</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <p><strong>Error!</strong></p>
+                            <p>Status: ${response.status}</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <p><strong>Network Error!</strong></p>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testUsers() {
+            const resultDiv = document.getElementById('usersResult');
+            resultDiv.innerHTML = '<p>Loading...</p>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/users`, {
+                    headers: {
+                        'Authorization': `Bearer ${getToken()}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <p><strong>Success!</strong></p>
+                            <p>Status: ${response.status}</p>
+                            <p>Count: ${data.data?.length || 0} users</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <p><strong>Error!</strong></p>
+                            <p>Status: ${response.status}</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <p><strong>Network Error!</strong></p>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Auto-check auth on load
+        window.onload = testAuth;
+    </script>
+</body>
+</html>

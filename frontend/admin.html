@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIIP Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/typography.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/auth.css">
+    <style>
+        .admin-sidebar {
+            transition: transform 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-sidebar.hidden-mobile {
+                transform: translateX(-100%);
+            }
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stat-card {
+            transition: transform 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+        
+        .data-table {
+            overflow-x: auto;
+        }
+        
+        .data-table table {
+            min-width: 600px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Admin Header -->
+    <header class="bg-[#0B4D3E] text-white shadow-lg sticky top-0 z-50">
+        <div class="flex items-center justify-between px-6 py-4">
+            <div class="flex items-center">
+                <button id="sidebarToggle" class="mr-4 md:hidden">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <h1 class="text-xl font-bold">GIIP Admin Dashboard</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span id="adminUserEmail" class="text-sm"></span>
+                <a href="/index.html" class="bg-white text-[#0B4D3E] hover:bg-gray-100 px-4 py-2 rounded transition flex items-center">
+                    <i class="fas fa-globe mr-2"></i>View Site
+                </a>
+                <button id="logoutBtn" class="bg-[#E63946] hover:bg-[#d62839] px-4 py-2 rounded transition">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside id="adminSidebar" class="admin-sidebar bg-white w-64 min-h-screen shadow-lg fixed md:relative z-40">
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <button class="nav-tab w-full text-left px-4 py-3 rounded hover:bg-gray-100 transition flex items-center active" data-tab="dashboard">
+                            <i class="fas fa-tachometer-alt mr-3 text-[#0B4D3E]"></i>
+                            <span>Dashboard</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-tab w-full text-left px-4 py-3 rounded hover:bg-gray-100 transition flex items-center" data-tab="news">
+                            <i class="fas fa-newspaper mr-3 text-[#0B4D3E]"></i>
+                            <span>News Management</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-tab w-full text-left px-4 py-3 rounded hover:bg-gray-100 transition flex items-center" data-tab="events">
+                            <i class="fas fa-calendar-alt mr-3 text-[#0B4D3E]"></i>
+                            <span>Events Management</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-tab w-full text-left px-4 py-3 rounded hover:bg-gray-100 transition flex items-center" data-tab="conferences">
+                            <i class="fas fa-users mr-3 text-[#0B4D3E]"></i>
+                            <span>Conferences Management</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-tab w-full text-left px-4 py-3 rounded hover:bg-gray-100 transition flex items-center" data-tab="users">
+                            <i class="fas fa-user-shield mr-3 text-[#0B4D3E]"></i>
+                            <span>User Management</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <h2 class="text-2xl font-bold mb-6 text-[#0B4D3E]">Dashboard</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card bg-white p-6 rounded-lg shadow">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Total News</p>
+                                <p id="newsCount" class="text-3xl font-bold text-[#0B4D3E]">0</p>
+                            </div>
+                            <i class="fas fa-newspaper text-4xl text-[#E63946]"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card bg-white p-6 rounded-lg shadow">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Total Events</p>
+                                <p id="eventsCount" class="text-3xl font-bold text-[#0B4D3E]">0</p>
+                            </div>
+                            <i class="fas fa-calendar-alt text-4xl text-[#E63946]"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card bg-white p-6 rounded-lg shadow">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Total Conferences</p>
+                                <p id="conferencesCount" class="text-3xl font-bold text-[#0B4D3E]">0</p>
+                            </div>
+                            <i class="fas fa-users text-4xl text-[#E63946]"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card bg-white p-6 rounded-lg shadow">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Total Users</p>
+                                <p id="usersCount" class="text-3xl font-bold text-[#0B4D3E]">0</p>
+                            </div>
+                            <i class="fas fa-user-shield text-4xl text-[#E63946]"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-bold mb-4 text-[#0B4D3E]">Quick Actions</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button onclick="switchTab('news')" class="bg-[#0B4D3E] text-white px-6 py-3 rounded hover:bg-[#1B5E20] transition">
+                            <i class="fas fa-plus mr-2"></i>Add News
+                        </button>
+                        <button onclick="switchTab('events')" class="bg-[#0B4D3E] text-white px-6 py-3 rounded hover:bg-[#1B5E20] transition">
+                            <i class="fas fa-plus mr-2"></i>Add Event
+                        </button>
+                        <button onclick="switchTab('conferences')" class="bg-[#0B4D3E] text-white px-6 py-3 rounded hover:bg-[#1B5E20] transition">
+                            <i class="fas fa-plus mr-2"></i>Add Conference
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News Tab -->
+            <div id="news" class="tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-[#0B4D3E]">News Management</h2>
+                    <button onclick="showAddNewsModal()" class="bg-[#E63946] text-white px-6 py-2 rounded hover:bg-[#d62839] transition">
+                        <i class="fas fa-plus mr-2"></i>Add News
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow">
+                    <div class="data-table">
+                        <table class="w-full">
+                            <thead class="bg-gray-50 border-b">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="newsTableBody" class="divide-y divide-gray-200">
+                                <!-- News items will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Events Tab -->
+            <div id="events" class="tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-[#0B4D3E]">Events Management</h2>
+                    <button onclick="showAddEventModal()" class="bg-[#E63946] text-white px-6 py-2 rounded hover:bg-[#d62839] transition">
+                        <i class="fas fa-plus mr-2"></i>Add Event
+                    </button>
+                </div>
+                
+                <!-- Status Filter -->
+                <div class="mb-4 flex gap-2">
+                    <button onclick="adminDashboard.filterEvents('all')" id="eventsFilterAll" class="px-4 py-2 rounded bg-[#0B4D3E] text-white">
+                        All
+                    </button>
+                    <button onclick="adminDashboard.filterEvents('active')" id="eventsFilterActive" class="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300">
+                        Active
+                    </button>
+                    <button onclick="adminDashboard.filterEvents('past')" id="eventsFilterPast" class="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300">
+                        Past
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow">
+                    <div class="data-table">
+                        <table class="w-full">
+                            <thead class="bg-gray-50 border-b">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Start Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">End Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="eventsTableBody" class="divide-y divide-gray-200">
+                                <!-- Events will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conferences Tab -->
+            <div id="conferences" class="tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-[#0B4D3E]">Conferences Management</h2>
+                    <button onclick="showAddConferenceModal()" class="bg-[#E63946] text-white px-6 py-2 rounded hover:bg-[#d62839] transition">
+                        <i class="fas fa-plus mr-2"></i>Add Conference
+                    </button>
+                </div>
+                
+                <!-- Status Filter -->
+                <div class="mb-4 flex gap-2">
+                    <button onclick="adminDashboard.filterConferences('all')" id="conferencesFilterAll" class="px-4 py-2 rounded bg-[#0B4D3E] text-white">
+                        All
+                    </button>
+                    <button onclick="adminDashboard.filterConferences('active')" id="conferencesFilterActive" class="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300">
+                        Active
+                    </button>
+                    <button onclick="adminDashboard.filterConferences('past')" id="conferencesFilterPast" class="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300">
+                        Past
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow">
+                    <div class="data-table">
+                        <table class="w-full">
+                            <thead class="bg-gray-50 border-b">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Start Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">End Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="conferencesTableBody" class="divide-y divide-gray-200">
+                                <!-- Conferences will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="users" class="tab-content">
+                <h2 class="text-2xl font-bold mb-6 text-[#0B4D3E]">User Management</h2>
+                
+                <div class="bg-white rounded-lg shadow">
+                    <div class="data-table">
+                        <table class="w-full">
+                            <thead class="bg-gray-50 border-b">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Registered</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody" class="divide-y divide-gray-200">
+                                <!-- Users will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </main>
+    </div>
+
+    <!-- Modals will be dynamically created -->
+    <div id="modalContainer"></div>
+
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailwind 移动端菜单测试</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0B4D3E',
+                        'primary': '#1B5E20',
+                        'accent': '#E63946',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --primary-dark: #0B4D3E;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 只保留必要的动画和状态 */
+        #mobile-nav-drawer.active {
+            left: 0 !important;
+        }
+
+        .menu-overlay.active {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+        }
+
+        /* 测试样式 */
+        .test-banner {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .test-info {
+            background: white;
+            padding: 30px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .tailwind-classes {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .tailwind-classes code {
+            background: #dcfce7;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #166534;
+            font-size: 13px;
+        }
+
+        .viewport-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-primary-dark sticky top-0 z-[100] shadow-lg">
+        <div class="container mx-auto px-5 max-w-[1200px]">
+            <nav class="flex justify-between items-center py-[15px]">
+                <a href="#" class="flex items-center">
+                    <div class="text-white text-[22px] font-bold tracking-wide">GIIP</div>
+                </a>
+                <div class="hidden md:flex items-center">
+                    <ul class="flex list-none">
+                        <li class="ml-[30px]"><a href="#" class="text-white">Home</a></li>
+                        <li class="ml-[30px]"><a href="#" class="text-white">News</a></li>
+                        <li class="ml-[30px]"><a href="#" class="text-white">Events</a></li>
+                    </ul>
+                </div>
+                <button class="mobile-menu-btn hidden md:hidden bg-transparent border-none text-white text-2xl cursor-pointer px-2.5 py-1.5 z-[110]" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="menu-overlay fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-[104] opacity-0 invisible transition-all duration-300"></div>
+
+    <!-- Mobile Navigation Drawer - 纯 Tailwind 实现 -->
+    <nav id="mobile-nav-drawer"
+        class="nav-links md:hidden fixed top-0 -left-full w-[85%] max-w-[320px] h-screen bg-primary-dark flex flex-col pt-20 px-[25px] pb-[30px] shadow-[2px_0_15px_rgba(0,0,0,0.2)] z-[105]">
+        <ul class="list-none">
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block text-base leading-[1.4] py-[10px] px-3">Home</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block text-base leading-[1.4] py-[10px] px-3">News</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block text-base leading-[1.4] py-[10px] px-3">Upcoming Events</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block text-base leading-[1.4] py-[10px] px-3">Past Conferences</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block text-base leading-[1.4] py-[10px] px-3">Highlights</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block text-base leading-[1.4] py-[10px] px-3">About Us</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block text-base leading-[1.4] py-[10px] px-3">Contact Us</a>
+            </li>
+        </ul>
+        <div class="auth-links-mobile mt-6 pt-6 border-t border-white/10">
+            <a href="#" class="text-white no-underline block text-base leading-[1.4] py-[10px] px-3 mb-3 border border-white/30 rounded-md text-center">Login</a>
+            <a href="#" class="bg-accent text-white no-underline block text-base leading-[1.4] py-[10px] px-3 rounded-md text-center">Register</a>
+        </div>
+    </nav>
+
+    <!-- Test Banner -->
+    <div class="test-banner">
+        <h1 class="text-3xl font-bold mb-2">✨ 纯 Tailwind CSS 实现</h1>
+        <p class="text-lg">无需自定义 CSS 和 !important</p>
+    </div>
+
+    <!-- Test Info -->
+    <div class="test-info">
+        <h2 class="text-2xl font-bold text-primary-dark mb-4">🎯 Tailwind 实现方案</h2>
+        <p class="mb-4">直接在 HTML 中使用 Tailwind 类来设置移动端菜单的字体样式，无需额外的 CSS。</p>
+        
+        <div class="tailwind-classes">
+            <h3 class="text-lg font-semibold mb-3 text-green-800">📝 使用的 Tailwind 类</h3>
+            <ul class="space-y-2">
+                <li><code>text-base</code> - 字体大小 16px</li>
+                <li><code>leading-[1.4]</code> - 行间距 1.4</li>
+                <li><code>py-[10px]</code> - 上下内边距 10px</li>
+                <li><code>px-3</code> - 左右内边距 12px (3 × 4px = 12px)</li>
+                <li><code>block</code> - 块级元素</li>
+            </ul>
+        </div>
+
+        <h3 class="text-xl font-semibold mt-6 mb-3">✅ 优势</h3>
+        <ul class="list-disc ml-6 space-y-2">
+            <li>无需自定义 CSS</li>
+            <li>无需使用 !important</li>
+            <li>代码更简洁易维护</li>
+            <li>完全响应式</li>
+            <li>Tailwind 原生支持</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mt-6 mb-3">🧪 测试步骤</h3>
+        <ol class="list-decimal ml-6 space-y-2">
+            <li>将浏览器窗口调整到移动端宽度（≤768px）</li>
+            <li>点击右上角的汉堡菜单按钮（☰）</li>
+            <li>右键点击任意菜单项 → 选择"检查"</li>
+            <li>在开发者工具中查看 <strong>Computed</strong> 标签页</li>
+            <li>验证：font-size: 16px, line-height: 22.4px, padding: 10px 12px</li>
+        </ol>
+
+        <h3 class="text-xl font-semibold mt-6 mb-3">📊 预期结果</h3>
+        <div class="bg-gray-100 p-4 rounded-lg font-mono text-sm">
+            <div>font-size: <span class="text-green-600 font-bold">16px</span> ✓</div>
+            <div>line-height: <span class="text-green-600 font-bold">22.4px</span> (16px × 1.4) ✓</div>
+            <div>padding-top: <span class="text-green-600 font-bold">10px</span> ✓</div>
+            <div>padding-right: <span class="text-green-600 font-bold">12px</span> ✓</div>
+            <div>padding-bottom: <span class="text-green-600 font-bold">10px</span> ✓</div>
+            <div>padding-left: <span class="text-green-600 font-bold">12px</span> ✓</div>
+        </div>
+    </div>
+
+    <!-- Viewport Indicator -->
+    <div class="viewport-indicator">
+        <div class="text-2xl font-bold mb-1" id="viewport-width">-</div>
+        <div class="text-sm" id="viewport-status">-</div>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('#mobile-nav-drawer');
+        const menuOverlay = document.querySelector('.menu-overlay');
+        const menuItems = document.querySelectorAll('#mobile-nav-drawer a');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                if (navLinks) {
+                    navLinks.classList.add('active');
+                }
+                if (menuOverlay) {
+                    menuOverlay.classList.add('active');
+                }
+                document.body.style.overflow = 'hidden';
+                
+                // 自动检查样式
+                setTimeout(() => {
+                    const firstLink = document.querySelector('#mobile-nav-drawer ul li a');
+                    if (firstLink) {
+                        const styles = window.getComputedStyle(firstLink);
+                        console.log('========================================');
+                        console.log('✨ Tailwind 移动端菜单样式');
+                        console.log('========================================');
+                        console.log('font-size:', styles.fontSize);
+                        console.log('line-height:', styles.lineHeight);
+                        console.log('padding:', styles.padding);
+                        console.log('display:', styles.display);
+                        console.log('========================================');
+                        
+                        // 验证
+                        const fontSize = parseFloat(styles.fontSize);
+                        const lineHeight = parseFloat(styles.lineHeight);
+                        const expectedLineHeight = fontSize * 1.4;
+                        
+                        console.log('✅ 验证结果:');
+                        console.log('font-size 是否为 16px?', fontSize === 16 ? '✓ 正确' : '✗ 错误');
+                        console.log('line-height 是否为 1.4?', Math.abs(lineHeight - expectedLineHeight) < 1 ? '✓ 正确' : '✗ 错误');
+                        console.log('========================================');
+                    }
+                }, 100);
+            });
+        }
+
+        function closeMenu() {
+            if (navLinks) {
+                navLinks.classList.remove('active');
+            }
+            if (menuOverlay) {
+                menuOverlay.classList.remove('active');
+            }
+            document.body.style.overflow = '';
+        }
+
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', closeMenu);
+        }
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', closeMenu);
+        });
+
+        // Viewport info
+        function updateViewportInfo() {
+            const width = window.innerWidth;
+            document.getElementById('viewport-width').textContent = width + 'px';
+            document.getElementById('viewport-status').textContent = width <= 768 ? '移动端' : '桌面端';
+        }
+
+        updateViewportInfo();
+        window.addEventListener('resize', updateViewportInfo);
+    </script>
+</body>
+</html>

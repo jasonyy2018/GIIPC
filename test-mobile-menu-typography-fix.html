@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>移动端菜单字体测试 - GIIP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0B4D3E',
+                        'primary': '#1B5E20',
+                        'accent': '#E63946',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px 12px;
+            z-index: 110;
+        }
+
+        /* Mobile menu slide animation */
+        .nav-links {
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Mobile menu active state */
+        #mobile-nav-drawer.active {
+            left: 0 !important;
+        }
+
+        /* Menu overlay active state */
+        .menu-overlay.active {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        /* 移动端核心字体样式 - 参考Archibucks规范 */
+        @media (max-width: 768px) {
+
+            /* 全局字体设置 */
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif !important;
+                font-size: 16px !important;
+                line-height: 1.6 !important;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                font-size: 20px;
+                padding: 8px 12px;
+            }
+
+            /* 移动端菜单容器 */
+            #mobile-nav-drawer {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif !important;
+            }
+
+            /* 移动端菜单项样式 - 参考Archibucks */
+            #mobile-nav-drawer ul li a {
+                font-size: 16px !important;
+                line-height: 1.6 !important;
+                padding: 12px 12px !important;
+                font-weight: 400 !important;
+                letter-spacing: 0.034em !important;
+                display: block !important;
+            }
+
+            /* 移动端认证按钮样式 */
+            .auth-links-mobile a {
+                font-size: 16px !important;
+                line-height: 1.6 !important;
+                font-weight: 400 !important;
+                padding: 12px 12px !important;
+                letter-spacing: 0.034em !important;
+            }
+
+            /* 确保移动端菜单显示 */
+            #mobile-nav-drawer.active {
+                display: flex !important;
+            }
+        }
+
+        /* Test section styles */
+        .test-info {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+        }
+
+        .test-info h2 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .test-info p {
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        .test-info code {
+            background: #fff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        .viewport-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #0B4D3E;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .content-section {
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .typography-test {
+            background: white;
+            padding: 30px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .typography-test h3 {
+            color: #0B4D3E;
+            margin-bottom: 15px;
+        }
+
+        .font-sample {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+
+        .font-sample .label {
+            font-weight: 600;
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .font-sample .sample-text {
+            color: #333;
+        }
+    </style>
+</head>
+<body class="font-sans text-text bg-gray-100">
+    <!-- Header -->
+    <header class="bg-primary-dark sticky top-0 z-[100] shadow-lg">
+        <div class="container mx-auto px-5 max-w-[1200px]">
+            <nav class="flex justify-between items-center py-[15px]">
+                <a href="#" class="flex items-center">
+                    <div class="text-white text-[22px] font-bold tracking-wide">GIIP</div>
+                </a>
+                <div class="hidden md:flex items-center">
+                    <ul class="nav-links flex list-none">
+                        <li class="ml-[30px]"><a href="#home" class="text-white">Home</a></li>
+                        <li class="ml-[30px]"><a href="#news" class="text-white">News</a></li>
+                        <li class="ml-[30px]"><a href="#events" class="text-white">Events</a></li>
+                    </ul>
+                </div>
+                <button class="mobile-menu-btn md:hidden" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="menu-overlay fixed top-0 left-0 right-0 bottom-0 bg-black/50 z-[104] opacity-0 invisible transition-all duration-300"></div>
+
+    <!-- Mobile Navigation Drawer -->
+    <nav id="mobile-nav-drawer"
+        class="nav-links md:hidden fixed top-0 -left-full w-[85%] max-w-[320px] h-screen bg-primary-dark flex-col pt-20 px-[25px] pb-[30px] shadow-[2px_0_15px_rgba(0,0,0,0.2)] z-[105]">
+        <ul class="list-none">
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block">Home</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block">News</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block">Upcoming Events</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block">Past Conferences</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block">Highlights</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block">About Us</a>
+            </li>
+            <li class="mb-[12px] border-b border-white/10 last:border-b-0">
+                <a href="#" class="text-white no-underline block">Contact Us</a>
+            </li>
+        </ul>
+        <div class="auth-links-mobile mt-6 pt-6 border-t border-white/10">
+            <a href="#" class="text-white no-underline py-3 px-3 block mb-3 border border-white/30 rounded-md text-center">Login</a>
+            <a href="#" class="bg-accent text-white no-underline py-3 px-3 block rounded-md text-center">Register</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="content-section">
+        <div class="test-info">
+            <h2>📱 移动端菜单字体测试</h2>
+            <p><strong>测试目标：</strong>验证移动端菜单的字体大小和行间距是否正确应用</p>
+            <p><strong>预期效果：</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>菜单项字体大小：<code>16px</code></li>
+                <li>行间距：<code>1.6</code></li>
+                <li>字体粗细：<code>400</code> (normal)</li>
+                <li>字母间距：<code>0.034em</code></li>
+                <li>内边距：<code>12px</code></li>
+            </ul>
+            <p style="margin-top: 15px;"><strong>测试步骤：</strong></p>
+            <ol style="margin-left: 20px;">
+                <li>将浏览器窗口调整到移动端宽度（≤768px）</li>
+                <li>点击右上角的汉堡菜单按钮（☰）</li>
+                <li>观察菜单项的字体大小和间距</li>
+                <li>使用浏览器开发者工具检查计算后的样式</li>
+            </ol>
+        </div>
+
+        <div class="typography-test">
+            <h3>🔍 字体样式参考</h3>
+            <p>以下是移动端菜单应该呈现的字体效果：</p>
+            
+            <div class="font-sample">
+                <div class="label">16px / line-height: 1.6 / font-weight: 400</div>
+                <div class="sample-text" style="font-size: 16px; line-height: 1.6; font-weight: 400; letter-spacing: 0.034em;">
+                    Home
+                </div>
+            </div>
+
+            <div class="font-sample">
+                <div class="label">16px / line-height: 1.6 / font-weight: 400</div>
+                <div class="sample-text" style="font-size: 16px; line-height: 1.6; font-weight: 400; letter-spacing: 0.034em;">
+                    Upcoming Events
+                </div>
+            </div>
+
+            <div class="font-sample">
+                <div class="label">16px / line-height: 1.6 / font-weight: 400</div>
+                <div class="sample-text" style="font-size: 16px; line-height: 1.6; font-weight: 400; letter-spacing: 0.034em;">
+                    Past Conferences
+                </div>
+            </div>
+        </div>
+
+        <div class="typography-test">
+            <h3>✅ 检查清单</h3>
+            <p>在移动端菜单中验证以下项目：</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>☐ 菜单项文字清晰可读</li>
+                <li>☐ 字体大小为 16px（使用开发者工具验证）</li>
+                <li>☐ 行间距舒适（line-height: 1.6）</li>
+                <li>☐ 字母间距适中（letter-spacing: 0.034em）</li>
+                <li>☐ 内边距为 12px</li>
+                <li>☐ 字体粗细为 400（normal）</li>
+                <li>☐ 使用系统字体（-apple-system 等）</li>
+                <li>☐ Login/Register 按钮字体也是 16px</li>
+            </ul>
+        </div>
+
+        <div class="typography-test">
+            <h3>🛠️ 开发者工具检查方法</h3>
+            <ol style="margin-left: 20px;">
+                <li>打开浏览器开发者工具（F12）</li>
+                <li>切换到移动端视图（Ctrl+Shift+M 或 Cmd+Shift+M）</li>
+                <li>选择一个移动设备（如 iPhone 12 Pro）</li>
+                <li>点击菜单按钮打开移动端菜单</li>
+                <li>使用元素选择器（Ctrl+Shift+C）点击菜单项</li>
+                <li>在 Computed 标签页查看：
+                    <ul style="margin-left: 20px; margin-top: 5px;">
+                        <li>font-size: 16px</li>
+                        <li>line-height: 25.6px (16px × 1.6)</li>
+                        <li>font-weight: 400</li>
+                        <li>letter-spacing: 0.544px (16px × 0.034)</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+    </main>
+
+    <!-- Viewport Info Display -->
+    <div class="viewport-info">
+        <div>视口宽度: <span id="viewport-width">-</span>px</div>
+        <div>状态: <span id="viewport-status">-</span></div>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('#mobile-nav-drawer');
+        const menuOverlay = document.querySelector('.menu-overlay');
+        const menuItems = document.querySelectorAll('#mobile-nav-drawer a');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                if (navLinks) {
+                    navLinks.classList.add('active');
+                }
+                if (menuOverlay) {
+                    menuOverlay.classList.add('active');
+                }
+                document.body.style.overflow = 'hidden';
+                
+                // Log computed styles for debugging
+                if (navLinks.classList.contains('active')) {
+                    setTimeout(() => {
+                        const firstLink = document.querySelector('#mobile-nav-drawer ul li a');
+                        if (firstLink) {
+                            const styles = window.getComputedStyle(firstLink);
+                            console.log('=== 移动端菜单项计算后的样式 ===');
+                            console.log('font-size:', styles.fontSize);
+                            console.log('line-height:', styles.lineHeight);
+                            console.log('font-weight:', styles.fontWeight);
+                            console.log('letter-spacing:', styles.letterSpacing);
+                            console.log('padding:', styles.padding);
+                            console.log('font-family:', styles.fontFamily);
+                            console.log('================================');
+                        }
+                    }, 100);
+                }
+            });
+        }
+
+        function closeMenu() {
+            if (navLinks) {
+                navLinks.classList.remove('active');
+            }
+            if (menuOverlay) {
+                menuOverlay.classList.remove('active');
+            }
+            document.body.style.overflow = '';
+        }
+
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', closeMenu);
+        }
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', closeMenu);
+        });
+
+        // Viewport info display
+        function updateViewportInfo() {
+            const width = window.innerWidth;
+            document.getElementById('viewport-width').textContent = width;
+            document.getElementById('viewport-status').textContent = width <= 768 ? '移动端' : '桌面端';
+        }
+
+        updateViewportInfo();
+        window.addEventListener('resize', updateViewportInfo);
+    </script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>认证功能测试 - GIIP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0B4D3E;
+        }
+        h2 {
+            color: #1B5E20;
+            border-bottom: 2px solid #E63946;
+            padding-bottom: 10px;
+        }
+        .test-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #1B5E20;
+        }
+        .success {
+            color: #4caf50;
+            font-weight: bold;
+        }
+        .error {
+            color: #f44336;
+            font-weight: bold;
+        }
+        .info {
+            color: #2196f3;
+        }
+        button {
+            background-color: #E63946;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #d32f3c;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 8px 0;
+        }
+        .checklist li:before {
+            content: "✓ ";
+            color: #4caf50;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔒 GIIP 认证功能测试指南</h1>
+    
+    <div class="test-section">
+        <h2>📋 测试清单</h2>
+        <ul class="checklist">
+            <li>前端服务运行在 <code>http://localhost</code></li>
+            <li>后端 API 运行在 <code>http://localhost:3000</code></li>
+            <li>数据库服务正常运行</li>
+            <li>所有 Docker 容器状态为 healthy</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 测试步骤</h2>
+        
+        <div class="test-item">
+            <h3>1. 测试注册功能</h3>
+            <p><strong>步骤：</strong></p>
+            <ol>
+                <li>访问 <a href="http://localhost" target="_blank">http://localhost</a></li>
+                <li>点击右上角的 <strong>"Register"</strong> 按钮</li>
+                <li>应该弹出注册模态框</li>
+                <li>填写表单：
+                    <ul>
+                        <li>Email: <code>test@giip.info</code></li>
+                        <li>Password: <code>Test123!</code></li>
+                        <li>Confirm Password: <code>Test123!</code></li>
+                    </ul>
+                </li>
+                <li>点击 <strong>"Create Account"</strong></li>
+                <li>应该显示成功消息并自动跳转到登录页面</li>
+            </ol>
+            <p class="info">💡 如果邮箱已存在，会显示错误消息</p>
+        </div>
+
+        <div class="test-item">
+            <h3>2. 测试登录功能</h3>
+            <p><strong>步骤：</strong></p>
+            <ol>
+                <li>点击右上角的 <strong>"Login"</strong> 按钮</li>
+                <li>应该弹出登录模态框</li>
+                <li>填写表单：
+                    <ul>
+                        <li>Email: <code>test@giip.info</code></li>
+                        <li>Password: <code>Test123!</code></li>
+                    </ul>
+                </li>
+                <li>点击 <strong>"Login"</strong></li>
+                <li>应该显示 "Login successful!" 消息</li>
+                <li>右上角应该显示用户邮箱和角色</li>
+                <li>应该显示 <strong>"Logout"</strong> 按钮</li>
+            </ol>
+        </div>
+
+        <div class="test-item">
+            <h3>3. 验证登录状态持久化</h3>
+            <p><strong>步骤：</strong></p>
+            <ol>
+                <li>登录成功后，刷新页面（F5）</li>
+                <li>用户应该仍然保持登录状态</li>
+                <li>右上角应该继续显示用户信息</li>
+            </ol>
+            <p class="info">💡 打开浏览器开发者工具 → Application → Local Storage 查看存储的数据</p>
+        </div>
+
+        <div class="test-item">
+            <h3>4. 测试登出功能</h3>
+            <p><strong>步骤：</strong></p>
+            <ol>
+                <li>点击右上角的 <strong>"Logout"</strong> 按钮</li>
+                <li>应该显示 "You have been logged out successfully" 消息</li>
+                <li>右上角应该恢复显示 "Login" 和 "Register" 按钮</li>
+                <li>localStorage 中的 token 和 user 数据应该被清除</li>
+            </ol>
+        </div>
+
+        <div class="test-item">
+            <h3>5. 测试表单验证</h3>
+            <p><strong>测试场景：</strong></p>
+            <ul>
+                <li><strong>空字段：</strong> 尝试提交空表单，应该显示浏览器原生验证</li>
+                <li><strong>邮箱格式：</strong> 输入无效邮箱（如 "test"），应该提示格式错误</li>
+                <li><strong>密码长度：</strong> 输入少于6个字符的密码，应该提示长度不足</li>
+                <li><strong>密码不匹配：</strong> 注册时两次密码不一致，应该显示错误消息</li>
+                <li><strong>错误凭据：</strong> 使用错误的密码登录，应该显示 "Invalid email or password"</li>
+            </ul>
+        </div>
+
+        <div class="test-item">
+            <h3>6. 测试移动端响应式</h3>
+            <p><strong>步骤：</strong></p>
+            <ol>
+                <li>打开浏览器开发者工具（F12）</li>
+                <li>切换到移动设备模拟模式</li>
+                <li>测试登录和注册功能</li>
+                <li>模态框应该适配移动屏幕</li>
+                <li>表单应该易于填写</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 浏览器控制台测试</h2>
+        <p>打开浏览器控制台（F12），运行以下命令：</p>
+        
+        <div class="test-item">
+            <h3>检查 localStorage</h3>
+            <code>
+                console.log('Token:', localStorage.getItem('authToken'));<br>
+                console.log('User:', localStorage.getItem('user'));
+            </code>
+        </div>
+
+        <div class="test-item">
+            <h3>检查认证管理器</h3>
+            <code>
+                // 检查是否已登录<br>
+                console.log('Is Authenticated:', !!localStorage.getItem('authToken'));
+            </code>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>✅ 预期结果</h2>
+        <ul class="checklist">
+            <li>注册功能正常工作，可以创建新用户</li>
+            <li>登录功能正常工作，可以使用注册的账号登录</li>
+            <li>登录状态在刷新页面后保持</li>
+            <li>登出功能正常工作，清除所有认证数据</li>
+            <li>表单验证正常工作，显示适当的错误消息</li>
+            <li>UI 更新正确，显示/隐藏相应的按钮</li>
+            <li>模态框动画流畅，用户体验良好</li>
+            <li>移动端显示正常，响应式设计工作正常</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🐛 常见问题排查</h2>
+        
+        <div class="test-item">
+            <h3>问题：点击按钮没有反应</h3>
+            <p><strong>解决方案：</strong></p>
+            <ul>
+                <li>检查浏览器控制台是否有 JavaScript 错误</li>
+                <li>确认 <code>auth.js</code> 文件已正确加载</li>
+                <li>清除浏览器缓存并刷新页面</li>
+            </ul>
+        </div>
+
+        <div class="test-item">
+            <h3>问题：API 请求失败</h3>
+            <p><strong>解决方案：</strong></p>
+            <ul>
+                <li>确认后端服务正在运行：<code>docker-compose ps</code></li>
+                <li>检查 API 健康状态：访问 <a href="http://localhost:3000/api/health" target="_blank">http://localhost:3000/api/health</a></li>
+                <li>查看后端日志：<code>docker-compose logs api</code></li>
+            </ul>
+        </div>
+
+        <div class="test-item">
+            <h3>问题：CORS 错误</h3>
+            <p><strong>解决方案：</strong></p>
+            <ul>
+                <li>确认 CORS 配置正确（应该允许 localhost）</li>
+                <li>检查 <code>backend/src/config/security.js</code> 中的 CORS 设置</li>
+                <li>重启后端服务：<code>docker-compose restart api</code></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 测试数据</h2>
+        <p>可以使用以下测试账号：</p>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="background: #f0f0f0;">
+                <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">邮箱</th>
+                <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">密码</th>
+                <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">角色</th>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><code>admin@giip.info</code></td>
+                <td style="padding: 10px; border: 1px solid #ddd;"><code>Password123!</code></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">admin</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><code>editor@giip.info</code></td>
+                <td style="padding: 10px; border: 1px solid #ddd;"><code>Password123!</code></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">editor</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><code>user@giip.info</code></td>
+                <td style="padding: 10px; border: 1px solid #ddd;"><code>Password123!</code></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">user</td>
+            </tr>
+        </table>
+        <p class="info">💡 这些是数据库种子数据中预设的账号</p>
+    </div>
+
+    <div class="test-section">
+        <h2>🚀 快速访问链接</h2>
+        <p>
+            <button onclick="window.open('http://localhost', '_blank')">打开前端</button>
+            <button onclick="window.open('http://localhost:3000/api/health', '_blank')">检查 API 健康</button>
+            <button onclick="alert('请在浏览器中按 F12 打开开发者工具')">打开开发者工具</button>
+        </p>
+    </div>
+
+    <div class="test-section" style="background: #e8f5e9; border-left: 4px solid #4caf50;">
+        <h2>✨ 功能亮点</h2>
+        <ul>
+            <li>🎨 美观的模态对话框设计</li>
+            <li>⚡ 流畅的动画效果</li>
+            <li>🔒 安全的密码处理</li>
+            <li>💾 自动状态持久化</li>
+            <li>📱 完全响应式设计</li>
+            <li>♿ 无障碍访问支持</li>
+            <li>🌐 完整的错误处理</li>
+            <li>🎯 直观的用户体验</li>
+        </ul>
+    </div>
+
+    <footer style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px solid #ddd; color: #666;">
+        <p>GIIP 认证系统测试指南 | 版本 1.0.0 | 2025年10月18日</p>
+    </footer>
+</body>
+</html>

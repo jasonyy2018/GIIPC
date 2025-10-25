@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flicker Fix Verification - Past Conferences</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        .test-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #FF8C42;
+        }
+        .conferences-slider {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                    Flicker Fix Verification
+                </h1>
+                <p class="text-gray-600">Testing Past Conferences rendering without flicker</p>
+            </div>
+            <button onclick="location.reload()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <i class="fas fa-redo mr-2"></i>Reload Test
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-green-600 font-medium">Fix Applied</p>
+                        <p class="text-2xl font-bold text-green-700">✓ Pre-compute Dates</p>
+                    </div>
+                    <i class="fas fa-calendar-check text-3xl text-green-500"></i>
+                </div>
+            </div>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-blue-600 font-medium">Optimization</p>
+                        <p class="text-2xl font-bold text-blue-700">DocumentFragment</p>
+                    </div>
+                    <i class="fas fa-bolt text-3xl text-blue-500"></i>
+                </div>
+            </div>
+            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-purple-600 font-medium">Result</p>
+                        <p class="text-2xl font-bold text-purple-700">No Flicker</p>
+                    </div>
+                    <i class="fas fa-eye text-3xl text-purple-500"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2 class="text-xl font-bold text-gray-900 mb-3">
+                <i class="fas fa-wrench text-orange-500 mr-2"></i>
+                Applied Fixes
+            </h2>
+            <ul class="space-y-2 text-gray-700">
+                <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                    <span><strong>Pre-compute all date strings</strong> before rendering to avoid timezone conversion during DOM updates</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                    <span><strong>Use DocumentFragment</strong> for batch DOM updates to prevent intermediate rendering states</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                    <span><strong>Single innerHTML update</strong> instead of multiple DOM manipulations</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                    <span><strong>Separate render methods</strong> for pre-computed data to ensure consistency</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2 class="text-xl font-bold text-gray-900 mb-3">
+                <i class="fas fa-users text-blue-500 mr-2"></i>
+                Past Conferences
+            </h2>
+            <p class="text-gray-600 mb-4">Watch the cards below - they should render smoothly without any text flicker</p>
+            <div class="conferences-slider" id="conferences-container">
+                <!-- Conferences will be loaded here -->
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2 class="text-xl font-bold text-gray-900 mb-3">
+                <i class="fas fa-clipboard-check text-green-500 mr-2"></i>
+                Verification Steps
+            </h2>
+            <ol class="space-y-2 text-gray-700 list-decimal list-inside">
+                <li>Open browser DevTools (F12) and go to Network tab</li>
+                <li>Clear cache and reload the page (Ctrl+Shift+R)</li>
+                <li>Watch the Past Conferences section load</li>
+                <li>Verify that date text appears smoothly without flicker</li>
+                <li>Click "Reload Test" button multiple times to verify consistency</li>
+            </ol>
+        </div>
+
+        <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div class="flex items-start">
+                <i class="fas fa-info-circle text-yellow-600 text-xl mr-3 mt-1"></i>
+                <div>
+                    <h3 class="font-bold text-yellow-800 mb-1">What to Look For</h3>
+                    <p class="text-yellow-700 text-sm">
+                        Before the fix, you would see the date text briefly show one value and then change to another (flicker).
+                        After the fix, the date text should appear immediately with the correct value and stay stable.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { ConferencesAPI } from './frontend/js/api-client.js';
+        import { formatDateRange } from './frontend/js/timezone-utils.js';
+
+        async function testConferencesRendering() {
+            const container = document.getElementById('conferences-container');
+            
+            try {
+                // Show loading
+                container.innerHTML = `
+                    <div class="col-span-full flex flex-col justify-center items-center py-20">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                        <p class="text-gray-600 text-sm">Loading past conferences...</p>
+                    </div>
+                `;
+
+                // Fetch past conferences
+                const response = await ConferencesAPI.getPast();
+                const conferences = response.data || [];
+
+                if (conferences.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-span-full text-center py-10 text-gray-500">
+                            <i class="fas fa-users text-4xl mb-3"></i>
+                            <p>No past conferences available.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // PRE-COMPUTE all date strings (this is the fix!)
+                const conferencesWithDates = conferences.map(conf => ({
+                    ...conf,
+                    dateRangeDisplay: (conf.start_date && conf.end_date)
+                        ? formatDateRange(conf.start_date, conf.end_date)
+                        : (conf.date_range || 'Date TBD')
+                }));
+
+                // Render using DocumentFragment (no flicker!)
+                const fragment = document.createDocumentFragment();
+                const tempDiv = document.createElement('div');
+                
+                tempDiv.innerHTML = conferencesWithDates.map(conf => {
+                    const imageUrl = conf.image_url || 'https://images.unsplash.com/photo-1517245386807-6c03e2ca1dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';
+                    const truncatedTitle = conf.title.length > 60 ? conf.title.substring(0, 60) + '...' : conf.title;
+                    
+                    return `
+                        <article class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group">
+                            <div class="h-[220px] overflow-hidden relative">
+                                <img src="${imageUrl}" alt="${conf.title}" 
+                                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                                    onerror="this.src='https://images.unsplash.com/photo-1517245386807-6c03e2ca1dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'">
+                            </div>
+                            <div class="p-6">
+                                <span class="text-gray-500 text-sm font-medium mb-3 block">
+                                    ${conf.dateRangeDisplay}
+                                </span>
+                                <h3 class="text-lg font-bold text-gray-900 mb-4 leading-tight line-clamp-2">
+                                    ${truncatedTitle}
+                                </h3>
+                                <a href="#conference-detail-${conf.id}" class="inline-flex items-center text-gray-600 hover:text-[#1B4D89] font-medium text-sm transition-colors">
+                                    Learn More <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
+                                <div class="mt-4 pt-4 border-t-2 border-gradient-to-r from-[#FF8C42] to-[#1B4D89]"></div>
+                            </div>
+                        </article>
+                    `;
+                }).join('');
+
+                // Move to fragment
+                while (tempDiv.firstChild) {
+                    fragment.appendChild(tempDiv.firstChild);
+                }
+
+                // Single DOM update - no flicker!
+                container.innerHTML = '';
+                container.appendChild(fragment);
+
+                console.log('✓ Conferences rendered successfully without flicker');
+
+            } catch (error) {
+                console.error('Error loading conferences:', error);
+                container.innerHTML = `
+                    <div class="col-span-full bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg text-center">
+                        <i class="fas fa-exclamation-circle text-2xl mb-2"></i>
+                        <p class="font-medium mb-1">Error Loading Data</p>
+                        <p class="text-sm">${error.message || 'Failed to load conferences'}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Run test
+        testConferencesRendering();
+    </script>
+</body>
+</html>

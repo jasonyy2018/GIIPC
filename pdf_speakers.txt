@@ -1,0 +1,6 @@
+
+=== Page 2 ===
+Traceback (most recent call last):
+  File "c:\Users\jason\Documents\projects\GIIPC\extract_pdf_text.py", line 10, in <module>
+    print(text)
+UnicodeEncodeError: 'gbk' codec can't encode character '\uf356' in position 16: illegal multibyte sequence

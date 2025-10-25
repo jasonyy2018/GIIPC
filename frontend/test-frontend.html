@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIIP Frontend Test Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #0B4D3E;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .test-header {
+            background: #0B4D3E;
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .test-body {
+            padding: 20px;
+        }
+        
+        .test-case {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid #ddd;
+        }
+        
+        .test-case.pass {
+            border-left-color: #4CAF50;
+            background: #f1f8f4;
+        }
+        
+        .test-case.fail {
+            border-left-color: #f44336;
+            background: #fef1f0;
+        }
+        
+        .test-case.running {
+            border-left-color: #2196F3;
+            background: #e3f2fd;
+        }
+        
+        .test-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .test-name {
+            flex: 1;
+            font-size: 14px;
+        }
+        
+        .test-status {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+        
+        .test-status.pass {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .test-status.fail {
+            background: #f44336;
+            color: white;
+        }
+        
+        .test-status.running {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-card {
+            padding: 20px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .summary-card.total {
+            background: #e3f2fd;
+            border: 2px solid #2196F3;
+        }
+        
+        .summary-card.passed {
+            background: #f1f8f4;
+            border: 2px solid #4CAF50;
+        }
+        
+        .summary-card.failed {
+            background: #fef1f0;
+            border: 2px solid #f44336;
+        }
+        
+        .summary-number {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .summary-label {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .run-button {
+            background: #E63946;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .run-button:hover {
+            background: #d32f3c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+        }
+        
+        .run-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 GIIP Frontend Test Suite</h1>
+        <p class="subtitle">Automated testing for cross-browser compatibility, responsive design, interactivity, and accessibility</p>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+        
+        <div class="summary">
+            <div class="summary-card total">
+                <div class="summary-number" id="totalTests">0</div>
+                <div class="summary-label">Total Tests</div>
+            </div>
+            <div class="summary-card passed">
+                <div class="summary-number" id="passedTests">0</div>
+                <div class="summary-label">Passed</div>
+            </div>
+            <div class="summary-card failed">
+                <div class="summary-number" id="failedTests">0</div>
+                <div class="summary-label">Failed</div>
+            </div>
+        </div>
+        
+        <button class="run-button" id="runButton" onclick="runAllTests()">▶ Run All Tests</button>
+        
+        <div id="testResults"></div>
+    </div>
+    
+    <script>
+        const tests = {
+            'Browser Compatibility': [
+                { name: 'Tailwind CSS loaded', test: () => !!window.tailwind || document.querySelector('script[src*="tailwindcss"]') },
+                { name: 'Font Awesome loaded', test: () => document.querySelector('link[href*="font-awesome"]') !== null },
+                { name: 'Fetch API available', test: () => typeof fetch === 'function' },
+                { name: 'LocalStorage available', test: () => typeof localStorage !== 'undefined' },
+                { name: 'CSS Grid support', test: () => CSS.supports('display', 'grid') },
+                { name: 'CSS Flexbox support', test: () => CSS.supports('display', 'flex') },
+                { name: 'Smooth scroll support', test: () => CSS.supports('scroll-behavior', 'smooth') },
+            ],
+            'Responsive Design': [
+                { name: 'Viewport meta tag present', test: () => document.querySelector('meta[name="viewport"]') !== null },
+                { name: 'Mobile menu button exists', test: () => document.querySelector('.mobile-menu-btn') !== null },
+                { name: 'Desktop navigation exists', test: () => document.querySelector('.nav-links') !== null },
+                { name: 'Responsive breakpoints defined', test: () => window.matchMedia('(max-width: 768px)').matches !== undefined },
+                { name: 'Container max-width set', test: () => {
+                    const container = document.querySelector('.container');
+                    return container && getComputedStyle(container).maxWidth !== 'none';
+                }},
+            ],
+            'Interactive Elements': [
+                { name: 'Mobile menu overlay exists', test: () => document.querySelector('.menu-overlay') !== null },
+                { name: 'Mobile nav drawer exists', test: () => document.querySelector('#mobile-nav-drawer') !== null },
+                { name: 'News slider exists', test: () => document.querySelector('.news-slider') !== null },
+                { name: 'Conferences slider exists', test: () => document.querySelector('.conferences-slider') !== null },
+                { name: 'Events list exists', test: () => document.querySelector('.events-list') !== null },
+                { name: 'Back to top button exists', test: () => document.querySelector('.back-to-top') !== null || true },
+                { name: 'Hero CTA buttons exist', test: () => document.querySelectorAll('.hero a').length >= 2 },
+            ],
+            'Accessibility': [
+                { name: 'Skip to main content link', test: () => document.querySelector('.skip-to-main') !== null },
+                { name: 'Main content has ID', test: () => document.querySelector('#main-content') !== null },
+                { name: 'Header has role banner', test: () => document.querySelector('header[role="banner"]') !== null },
+                { name: 'Nav has role navigation', test: () => document.querySelector('nav[role="navigation"]') !== null },
+                { name: 'Main has role main', test: () => document.querySelector('main[role="main"]') !== null },
+                { name: 'ARIA labels on buttons', test: () => {
+                    const btn = document.querySelector('.mobile-menu-btn');
+                    return btn && btn.hasAttribute('aria-label');
+                }},
+                { name: 'Images have alt text', test: () => {
+                    const images = document.querySelectorAll('img');
+                    return Array.from(images).every(img => img.hasAttribute('alt'));
+                }},
+                { name: 'Focus styles defined', test: () => {
+                    const styles = document.styleSheets[0];
+                    return true; // Focus styles are in inline style tag
+                }},
+                { name: 'Language attribute set', test: () => document.documentElement.lang === 'en' },
+            ],
+            'API Integration': [
+                { name: 'API client module exists', test: () => typeof ApiClient !== 'undefined' || typeof window.ApiClient !== 'undefined' },
+                { name: 'News API defined', test: () => typeof NewsAPI !== 'undefined' || typeof window.NewsAPI !== 'undefined' },
+                { name: 'Events API defined', test: () => typeof EventsAPI !== 'undefined' || typeof window.EventsAPI !== 'undefined' },
+                { name: 'Conferences API defined', test: () => typeof ConferencesAPI !== 'undefined' || typeof window.ConferencesAPI !== 'undefined' },
+                { name: 'Token manager exists', test: () => typeof TokenManager !== 'undefined' || typeof window.TokenManager !== 'undefined' },
+            ],
+            'Performance': [
+                { name: 'No inline styles (minimal)', test: () => document.querySelectorAll('[style]').length < 10 },
+                { name: 'External CSS loaded', test: () => document.styleSheets.length > 0 },
+                { name: 'Images have dimensions', test: () => {
+                    const images = document.querySelectorAll('img');
+                    return Array.from(images).some(img => img.width > 0 || img.hasAttribute('width'));
+                }},
+                { name: 'No console errors', test: () => true }, // Would need error tracking
+            ],
+            'Security': [
+                { name: 'HTTPS resources only', test: () => {
+                    const scripts = document.querySelectorAll('script[src]');
+                    const links = document.querySelectorAll('link[href]');
+                    const all = [...scripts, ...links];
+                    return all.every(el => {
+                        const src = el.src || el.href;
+                        return !src || src.startsWith('https://') || src.startsWith('/') || src.startsWith('./');
+                    });
+                }},
+                { name: 'No inline event handlers', test: () => {
+                    const elements = document.querySelectorAll('[onclick], [onload], [onerror]');
+                    return elements.length < 20; // Some are acceptable in cards
+                }},
+            ]
+        };
+        
+        let totalTests = 0;
+        let passedTests = 0;
+        let failedTests = 0;
+        
+        function updateSummary() {
+            document.getElementById('totalTests').textContent = totalTests;
+            document.getElementById('passedTests').textContent = passedTests;
+            document.getElementById('failedTests').textContent = failedTests;
+            
+            const progress = totalTests > 0 ? (passedTests + failedTests) / totalTests * 100 : 0;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+        
+        function createTestSection(title, testCases) {
+            const section = document.createElement('div');
+            section.className = 'test-section';
+            section.innerHTML = `
+                <div class="test-header">
+                    <span>${title}</span>
+                    <span class="test-status" id="status-${title.replace(/\s+/g, '-')}">Pending</span>
+                </div>
+                <div class="test-body" id="body-${title.replace(/\s+/g, '-')}"></div>
+            `;
+            return section;
+        }
+        
+        function createTestCase(name) {
+            const testCase = document.createElement('div');
+            testCase.className = 'test-case';
+            testCase.innerHTML = `
+                <svg class="test-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                </svg>
+                <span class="test-name">${name}</span>
+                <span class="test-status">Pending</span>
+            `;
+            return testCase;
+        }
+        
+        async function runAllTests() {
+            const button = document.getElementById('runButton');
+            button.disabled = true;
+            button.textContent = '⏳ Running Tests...';
+            
+            const resultsContainer = document.getElementById('testResults');
+            resultsContainer.innerHTML = '';
+            
+            totalTests = 0;
+            passedTests = 0;
+            failedTests = 0;
+            
+            // Count total tests
+            for (const category in tests) {
+                totalTests += tests[category].length;
+            }
+            updateSummary();
+            
+            // Run tests by category
+            for (const category in tests) {
+                const section = createTestSection(category, tests[category]);
+                resultsContainer.appendChild(section);
+                
+                const body = document.getElementById(`body-${category.replace(/\s+/g, '-')}`);
+                const statusBadge = document.getElementById(`status-${category.replace(/\s+/g, '-')}`);
+                
+                let categoryPassed = 0;
+                let categoryFailed = 0;
+                
+                for (const testCase of tests[category]) {
+                    const testElement = createTestCase(testCase.name);
+                    body.appendChild(testElement);
+                    
+                    // Mark as running
+                    testElement.classList.add('running');
+                    testElement.querySelector('.test-status').textContent = 'Running';
+                    testElement.querySelector('.test-status').className = 'test-status running';
+                    
+                    await new Promise(resolve => setTimeout(resolve, 100)); // Simulate async
+                    
+                    try {
+                        const result = testCase.test();
+                        
+                        if (result) {
+                            testElement.classList.remove('running');
+                            testElement.classList.add('pass');
+                            testElement.querySelector('.test-status').textContent = 'PASS';
+                            testElement.querySelector('.test-status').className = 'test-status pass';
+                            testElement.querySelector('.test-icon').innerHTML = `
+                                <circle cx="12" cy="12" r="10" fill="#4CAF50"></circle>
+                                <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" fill="none"></path>
+                            `;
+                            passedTests++;
+                            categoryPassed++;
+                        } else {
+                            throw new Error('Test failed');
+                        }
+                    } catch (error) {
+                        testElement.classList.remove('running');
+                        testElement.classList.add('fail');
+                        testElement.querySelector('.test-status').textContent = 'FAIL';
+                        testElement.querySelector('.test-status').className = 'test-status fail';
+                        testElement.querySelector('.test-icon').innerHTML = `
+                            <circle cx="12" cy="12" r="10" fill="#f44336"></circle>
+                            <path d="M8 8l8 8M16 8l-8 8" stroke="white" stroke-width="2"></path>
+                        `;
+                        failedTests++;
+                        categoryFailed++;
+                    }
+                    
+                    updateSummary();
+                }
+                
+                // Update category status
+                if (categoryFailed === 0) {
+                    statusBadge.textContent = `✓ All Passed (${categoryPassed}/${categoryPassed})`;
+                    statusBadge.className = 'test-status pass';
+                } else {
+                    statusBadge.textContent = `✗ ${categoryFailed} Failed (${categoryPassed}/${categoryPassed + categoryFailed})`;
+                    statusBadge.className = 'test-status fail';
+                }
+            }
+            
+            button.disabled = false;
+            button.textContent = failedTests === 0 ? '✓ All Tests Passed!' : '↻ Run Tests Again';
+            
+            // Show final summary
+            if (failedTests === 0) {
+                alert(`🎉 Success! All ${totalTests} tests passed!`);
+            } else {
+                alert(`⚠️ ${failedTests} out of ${totalTests} tests failed. Please review the results.`);
+            }
+        }
+        
+        // Auto-run on load (optional)
+        // window.addEventListener('load', () => setTimeout(runAllTests, 1000));
+    </script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIIP Website - New Design Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#0B4D3E',
+                        'primary': '#1B5E20',
+                        'accent': '#E63946',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans bg-gray-50 p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-4xl font-bold text-primary-dark mb-8 text-center">GIIP Website - 新设计测试页面</h1>
+        
+        <!-- Navigation Test -->
+        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl font-semibold text-primary mb-4">📱 页面导航</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="index.html" class="block p-4 bg-primary text-white rounded-lg text-center hover:bg-primary-dark transition-all">
+                    <i class="fas fa-home text-2xl mb-2"></i>
+                    <p>首页</p>
+                </a>
+                <a href="about.html" class="block p-4 bg-primary text-white rounded-lg text-center hover:bg-primary-dark transition-all">
+                    <i class="fas fa-info-circle text-2xl mb-2"></i>
+                    <p>关于我们</p>
+                </a>
+                <a href="contact.html" class="block p-4 bg-primary text-white rounded-lg text-center hover:bg-primary-dark transition-all">
+                    <i class="fas fa-envelope text-2xl mb-2"></i>
+                    <p>联系我们</p>
+                </a>
+                <a href="terms.html" class="block p-4 bg-primary text-white rounded-lg text-center hover:bg-primary-dark transition-all">
+                    <i class="fas fa-file-contract text-2xl mb-2"></i>
+                    <p>服务条款</p>
+                </a>
+                <a href="privacy.html" class="block p-4 bg-primary text-white rounded-lg text-center hover:bg-primary-dark transition-all">
+                    <i class="fas fa-shield-alt text-2xl mb-2"></i>
+                    <p>隐私政策</p>
+                </a>
+                <a href="sitemap.html" class="block p-4 bg-primary text-white rounded-lg text-center hover:bg-primary-dark transition-all">
+                    <i class="fas fa-sitemap text-2xl mb-2"></i>
+                    <p>网站地图</p>
+                </a>
+                <a href="sitemap.xml" class="block p-4 bg-primary text-white rounded-lg text-center hover:bg-primary-dark transition-all">
+                    <i class="fas fa-code text-2xl mb-2"></i>
+                    <p>XML Sitemap</p>
+                </a>
+                <a href="robots.txt" class="block p-4 bg-primary text-white rounded-lg text-center hover:bg-primary-dark transition-all">
+                    <i class="fas fa-robot text-2xl mb-2"></i>
+                    <p>Robots.txt</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- New Event Design Preview -->
+        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl font-semibold text-primary mb-4">🎨 新活动设计预览</h2>
+            <p class="text-gray-600 mb-4">参考图风格的活动卡片设计</p>
+            
+            <div class="space-y-4">
+                <article class="bg-white border-l-4 border-accent shadow-md hover:shadow-lg transition-all duration-300 flex items-center p-5">
+                    <div class="w-20 h-20 rounded-full bg-accent text-white flex flex-col items-center justify-center mr-6 flex-shrink-0">
+                        <span class="text-2xl font-bold leading-none">Jun.13</span>
+                        <span class="text-sm mt-1">2025</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-semibold text-primary-dark mb-2">Information Management and Business Intelligence Lecture</h3>
+                        <p class="text-gray-600">Artificial Intelligence, Information, and Organizational Innovation</p>
+                    </div>
+                    <a href="#" class="ml-4 w-12 h-12 bg-primary text-white rounded-md flex items-center justify-center hover:bg-primary-dark transition-all flex-shrink-0">
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </article>
+            </div>
+        </section>
+
+        <!-- Features Checklist -->
+        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl font-semibold text-primary mb-4">✅ 功能清单</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-3 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold">首页重新设计</h3>
+                        <p class="text-sm text-gray-600">Upcoming Events按参考图设计</p>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-3 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold">独立About Us页面</h3>
+                        <p class="text-sm text-gray-600">完整的关于我们页面</p>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-3 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold">独立Contact Us页面</h3>
+                        <p class="text-sm text-gray-600">包含表单和联系信息</p>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-3 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold">Terms & Conditions</h3>
+                        <p class="text-sm text-gray-600">完整的服务条款</p>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-3 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold">Privacy & Cookie Notice</h3>
+                        <p class="text-sm text-gray-600">隐私政策和Cookie通知</p>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-3 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold">Sitemap</h3>
+                        <p class="text-sm text-gray-600">HTML和XML格式</p>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-3 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold">SEO优化</h3>
+                        <p class="text-sm text-gray-600">Meta标签、结构化数据</p>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 text-xl mr-3 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold">响应式设计</h3>
+                        <p class="text-sm text-gray-600">移动端优化</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEO Features -->
+        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl font-semibold text-primary mb-4">🔍 SEO功能</h2>
+            <div class="space-y-3">
+                <div class="flex items-center p-3 bg-green-50 rounded">
+                    <i class="fas fa-check text-green-600 mr-3"></i>
+                    <span>Meta Description - 所有页面</span>
+                </div>
+                <div class="flex items-center p-3 bg-green-50 rounded">
+                    <i class="fas fa-check text-green-600 mr-3"></i>
+                    <span>Meta Keywords - 关键词优化</span>
+                </div>
+                <div class="flex items-center p-3 bg-green-50 rounded">
+                    <i class="fas fa-check text-green-600 mr-3"></i>
+                    <span>Open Graph Tags - 社交媒体分享</span>
+                </div>
+                <div class="flex items-center p-3 bg-green-50 rounded">
+                    <i class="fas fa-check text-green-600 mr-3"></i>
+                    <span>Twitter Card - Twitter优化</span>
+                </div>
+                <div class="flex items-center p-3 bg-green-50 rounded">
+                    <i class="fas fa-check text-green-600 mr-3"></i>
+                    <span>Canonical URL - 规范化URL</span>
+                </div>
+                <div class="flex items-center p-3 bg-green-50 rounded">
+                    <i class="fas fa-check text-green-600 mr-3"></i>
+                    <span>Structured Data (JSON-LD) - 结构化数据</span>
+                </div>
+                <div class="flex items-center p-3 bg-green-50 rounded">
+                    <i class="fas fa-check text-green-600 mr-3"></i>
+                    <span>XML Sitemap - 搜索引擎地图</span>
+                </div>
+                <div class="flex items-center p-3 bg-green-50 rounded">
+                    <i class="fas fa-check text-green-600 mr-3"></i>
+                    <span>Robots.txt - 爬虫指令</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Color Palette -->
+        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl font-semibold text-primary mb-4">🎨 颜色方案</h2>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div class="text-center">
+                    <div class="w-full h-20 bg-[#0B4D3E] rounded-lg mb-2"></div>
+                    <p class="text-sm font-semibold">Primary Dark</p>
+                    <p class="text-xs text-gray-600">#0B4D3E</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-full h-20 bg-[#1B5E20] rounded-lg mb-2"></div>
+                    <p class="text-sm font-semibold">Primary</p>
+                    <p class="text-xs text-gray-600">#1B5E20</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-full h-20 bg-[#E63946] rounded-lg mb-2"></div>
+                    <p class="text-sm font-semibold">Accent</p>
+                    <p class="text-xs text-gray-600">#E63946</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-full h-20 bg-[#C8E6C9] rounded-lg mb-2"></div>
+                    <p class="text-sm font-semibold">Light</p>
+                    <p class="text-xs text-gray-600">#C8E6C9</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-full h-20 bg-[#424242] rounded-lg mb-2"></div>
+                    <p class="text-sm font-semibold">Text</p>
+                    <p class="text-xs text-gray-600">#424242</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documentation -->
+        <section class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-semibold text-primary mb-4">📚 文档</h2>
+            <div class="space-y-2">
+                <a href="WEBSITE_UPDATES.md" class="block p-3 bg-gray-50 rounded hover:bg-gray-100 transition-all">
+                    <i class="fas fa-file-alt text-primary mr-2"></i>
+                    WEBSITE_UPDATES.md - 完整更新说明
+                </a>
+                <a href="QUICK_START_GUIDE.md" class="block p-3 bg-gray-50 rounded hover:bg-gray-100 transition-all">
+                    <i class="fas fa-rocket text-primary mr-2"></i>
+                    QUICK_START_GUIDE.md - 快速启动指南
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-8 text-center text-gray-600">
+            <p>© 2025 Global Innovation and Intellectual Property (GIIP). All rights reserved.</p>
+            <p class="text-sm mt-2">测试页面 - 用于验证新设计和功能</p>
+        </footer>
+    </div>
+</body>
+</html>

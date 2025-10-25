@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完整修复验证 - Past Conferences</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="frontend/css/anti-flicker.css">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .test-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .status-card {
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+        .status-success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-left: 4px solid #28a745;
+        }
+        .status-info {
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+            border-left: 4px solid #17a2b8;
+        }
+        .conferences-slider {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .fix-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        .fix-badge.done {
+            background: #28a745;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">
+                <i class="fas fa-check-double text-green-500 mr-3"></i>
+                完整修复验证
+            </h1>
+            <p class="text-gray-600 text-lg">Past Conferences 闪烁问题 - 三层防护方案</p>
+        </div>
+
+        <!-- Fix Summary -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="status-card status-success">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-green-700 font-medium mb-1">数据层修复</p>
+                        <p class="text-xl font-bold text-green-800">image_url 字段</p>
+                        <span class="fix-badge done">✓ 已添加</span>
+                    </div>
+                    <i class="fas fa-database text-4xl text-green-600"></i>
+                </div>
+            </div>
+            <div class="status-card status-success">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-green-700 font-medium mb-1">逻辑层修复</p>
+                        <p class="text-xl font-bold text-green-800">预计算 + Fragment</p>
+                        <span class="fix-badge done">✓ 已优化</span>
+                    </div>
+                    <i class="fas fa-code text-4xl text-green-600"></i>
+                </div>
+            </div>
+            <div class="status-card status-success">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-green-700 font-medium mb-1">表现层修复</p>
+                        <p class="text-xl font-bold text-green-800">Anti-Flicker CSS</p>
+                        <span class="fix-badge done">✓ 已应用</span>
+                    </div>
+                    <i class="fas fa-paint-brush text-4xl text-green-600"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fix Details -->
+        <div class="status-card status-info mb-6">
+            <h2 class="text-xl font-bold text-blue-900 mb-3">
+                <i class="fas fa-tools mr-2"></i>
+                修复内容
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <h3 class="font-semibold text-blue-800 mb-2">问题根源</h3>
+                    <ul class="space-y-1 text-sm text-blue-700">
+                        <li><i class="fas fa-times-circle text-red-500 mr-2"></i>数据库缺少 image_url 字段</li>
+                        <li><i class="fas fa-times-circle text-red-500 mr-2"></i>图片加载失败触发 onerror</li>
+                        <li><i class="fas fa-times-circle text-red-500 mr-2"></i>渲染时进行时区转换</li>
+                        <li><i class="fas fa-times-circle text-red-500 mr-2"></i>DOM多次更新造成重绘</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-blue-800 mb-2">解决方案</h3>
+                    <ul class="space-y-1 text-sm text-blue-700">
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>添加 image_url 列到数据库</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>预计算所有日期和格式</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>使用 DocumentFragment 批量更新</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>CSS 防闪烁保护层</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Test -->
+        <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                <i class="fas fa-users text-purple-600 mr-2"></i>
+                实时测试 - Past Conferences
+            </h2>
+            <p class="text-gray-700 mb-4">
+                观察下方卡片加载过程，应该看到：
+                <span class="inline-block px-2 py-1 bg-green-100 text-green-800 rounded text-sm ml-2">
+                    ✓ 日期文字稳定显示
+                </span>
+                <span class="inline-block px-2 py-1 bg-green-100 text-green-800 rounded text-sm ml-2">
+                    ✓ 图片平滑淡入
+                </span>
+                <span class="inline-block px-2 py-1 bg-green-100 text-green-800 rounded text-sm ml-2">
+                    ✓ 无布局跳动
+                </span>
+            </p>
+            <div class="conferences-slider" id="conferences-container">
+                <!-- Conferences will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Verification Steps -->
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+            <div class="flex items-start">
+                <i class="fas fa-lightbulb text-yellow-600 text-2xl mr-3 mt-1"></i>
+                <div>
+                    <h3 class="font-bold text-yellow-800 mb-2">验证步骤</h3>
+                    <ol class="list-decimal list-inside space-y-1 text-yellow-700 text-sm">
+                        <li>打开浏览器开发者工具 (F12)</li>
+                        <li>切换到 Network 标签</li>
+                        <li>点击下方的"重新加载"按钮</li>
+                        <li>观察图片是否成功加载（状态码 200）</li>
+                        <li>观察日期文字是否稳定显示</li>
+                        <li>多次刷新验证一致性</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4 mt-6">
+            <button onclick="location.reload()" class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                <i class="fas fa-redo mr-2"></i>重新加载测试
+            </button>
+            <button onclick="window.open('http://localhost', '_blank')" class="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold">
+                <i class="fas fa-external-link-alt mr-2"></i>打开实际网站
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { ConferencesAPI } from './frontend/js/api-client.js';
+        import { formatDateRange } from './frontend/js/timezone-utils.js';
+
+        async function testConferences() {
+            const container = document.getElementById('conferences-container');
+            
+            try {
+                container.innerHTML = `
+                    <div class="col-span-full flex flex-col justify-center items-center py-20">
+                        <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600 mb-4"></div>
+                        <p class="text-gray-600 font-medium">正在加载 Past Conferences...</p>
+                    </div>
+                `;
+
+                const response = await ConferencesAPI.getPast();
+                const conferences = response.data || [];
+
+                if (conferences.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-span-full text-center py-10 text-gray-500">
+                            <i class="fas fa-users text-5xl mb-3"></i>
+                            <p class="text-lg">暂无过往会议数据</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // 预计算所有数据（防闪烁关键步骤）
+                const conferencesWithData = conferences.map(conf => ({
+                    ...conf,
+                    dateRangeDisplay: (conf.start_date && conf.end_date)
+                        ? formatDateRange(conf.start_date, conf.end_date)
+                        : (conf.date_range || 'Date TBD')
+                }));
+
+                // 使用 DocumentFragment 批量渲染
+                const fragment = document.createDocumentFragment();
+                const tempDiv = document.createElement('div');
+                
+                tempDiv.innerHTML = conferencesWithData.map(conf => {
+                    const imageUrl = conf.image_url || 'https://images.unsplash.com/photo-1517245386807-6c03e2ca1dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';
+                    const truncatedTitle = conf.title.length > 60 ? conf.title.substring(0, 60) + '...' : conf.title;
+                    
+                    return `
+                        <article class="conference-card bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group">
+                            <div class="conference-img h-[220px] overflow-hidden relative">
+                                <img src="${imageUrl}" alt="${conf.title}" 
+                                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                                    onerror="this.src='https://images.unsplash.com/photo-1517245386807-6c03e2ca1dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'">
+                            </div>
+                            <div class="conference-content p-6">
+                                <span class="conference-date text-gray-500 text-sm font-medium mb-3 block">
+                                    <i class="far fa-calendar mr-1"></i>
+                                    ${conf.dateRangeDisplay}
+                                </span>
+                                <h3 class="text-lg font-bold text-gray-900 mb-4 leading-tight line-clamp-2">
+                                    ${truncatedTitle}
+                                </h3>
+                                <a href="#conference-detail-${conf.id}" class="inline-flex items-center text-gray-600 hover:text-purple-600 font-medium text-sm transition-colors">
+                                    Learn More <i class="fas fa-arrow-right ml-2"></i>
+                                </a>
+                                <div class="mt-4 pt-4 border-t-2 border-gradient-to-r from-purple-500 to-blue-500"></div>
+                            </div>
+                        </article>
+                    `;
+                }).join('');
+
+                while (tempDiv.firstChild) {
+                    fragment.appendChild(tempDiv.firstChild);
+                }
+
+                // 单次DOM更新
+                container.innerHTML = '';
+                container.appendChild(fragment);
+
+                // 图片加载状态管理
+                const images = container.querySelectorAll('img');
+                images.forEach(img => {
+                    if (img.complete) {
+                        img.classList.add('loaded');
+                    } else {
+                        img.addEventListener('load', () => {
+                            img.classList.add('loaded');
+                        });
+                        img.addEventListener('error', () => {
+                            img.classList.add('loaded');
+                        });
+                    }
+                });
+
+                container.classList.add('loaded');
+
+                console.log('✅ Conferences 渲染完成，无闪烁！');
+                console.log(`📊 加载了 ${conferences.length} 个会议`);
+                console.log('🖼️ 所有图片URL:', conferences.map(c => c.image_url));
+
+            } catch (error) {
+                console.error('❌ 加载失败:', error);
+                container.innerHTML = `
+                    <div class="col-span-full bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg text-center">
+                        <i class="fas fa-exclamation-triangle text-3xl mb-2"></i>
+                        <p class="font-medium mb-1">加载失败</p>
+                        <p class="text-sm">${error.message || '请检查后端服务是否运行'}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 运行测试
+        testConferences();
+    </script>
+</body>
+</html>

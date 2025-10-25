@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Event Detail Page - GIIP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .test-pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="margin-bottom: 20px; color: #333;">Event Detail Page Test Suite</h1>
+
+    <div class="test-section">
+        <h2>Test 1: File Existence</h2>
+        <div id="test1-result" class="test-result test-info">Running...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Event Detail Page Structure</h2>
+        <div id="test2-result" class="test-result test-info">Running...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: JavaScript Module Loading</h2>
+        <div id="test3-result" class="test-result test-info">Running...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: Required Elements Present</h2>
+        <div id="test4-result" class="test-result test-info">Running...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 5: Quick Navigation Test</h2>
+        <p>Click the button below to test the event detail page with a sample event ID:</p>
+        <button onclick="window.location.href='event-detail.html?id=1'" 
+                style="background: #1B5E20; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px;">
+            Open Event Detail Page (ID: 1)
+        </button>
+    </div>
+
+    <script type="module">
+        // Test 1: Check if files exist
+        async function test1() {
+            const result = document.getElementById('test1-result');
+            try {
+                const htmlResponse = await fetch('event-detail.html');
+                const jsResponse = await fetch('js/event-detail.js');
+                
+                if (htmlResponse.ok && jsResponse.ok) {
+                    result.className = 'test-result test-pass';
+                    result.innerHTML = '<i class="fas fa-check-circle"></i> PASS: Both event-detail.html and event-detail.js files exist';
+                } else {
+                    result.className = 'test-result test-fail';
+                    result.innerHTML = '<i class="fas fa-times-circle"></i> FAIL: One or more files not found';
+                }
+            } catch (error) {
+                result.className = 'test-result test-fail';
+                result.innerHTML = '<i class="fas fa-times-circle"></i> FAIL: ' + error.message;
+            }
+        }
+
+        // Test 2: Check HTML structure
+        async function test2() {
+            const result = document.getElementById('test2-result');
+            try {
+                const response = await fetch('event-detail.html');
+                const html = await response.text();
+                
+                const checks = [
+                    { name: 'Hero section', pattern: /event-date-badge-large/ },
+                    { name: 'Event title element', pattern: /id="event-title"/ },
+                    { name: 'Event description', pattern: /id="event-description"/ },
+                    { name: 'Registration form', pattern: /id="registration-form"/ },
+                    { name: 'Auth required section', pattern: /id="auth-required"/ },
+                    { name: 'Related events', pattern: /id="related-events"/ }
+                ];
+                
+                const results = checks.map(check => ({
+                    name: check.name,
+                    passed: check.pattern.test(html)
+                }));
+                
+                const allPassed = results.every(r => r.passed);
+                
+                if (allPassed) {
+                    result.className = 'test-result test-pass';
+                    result.innerHTML = '<i class="fas fa-check-circle"></i> PASS: All required HTML elements present';
+                } else {
+                    result.className = 'test-result test-fail';
+                    const failed = results.filter(r => !r.passed).map(r => r.name).join(', ');
+                    result.innerHTML = '<i class="fas fa-times-circle"></i> FAIL: Missing elements: ' + failed;
+                }
+            } catch (error) {
+                result.className = 'test-result test-fail';
+                result.innerHTML = '<i class="fas fa-times-circle"></i> FAIL: ' + error.message;
+            }
+        }
+
+        // Test 3: Check JavaScript module
+        async function test3() {
+            const result = document.getElementById('test3-result');
+            try {
+                const module = await import('./js/event-detail.js');
+                
+                if (module.EventDetailPage) {
+                    result.className = 'test-result test-pass';
+                    result.innerHTML = '<i class="fas fa-check-circle"></i> PASS: EventDetailPage class exported correctly';
+                } else {
+                    result.className = 'test-result test-fail';
+                    result.innerHTML = '<i class="fas fa-times-circle"></i> FAIL: EventDetailPage class not found in module';
+                }
+            } catch (error) {
+                result.className = 'test-result test-fail';
+                result.innerHTML = '<i class="fas fa-times-circle"></i> FAIL: ' + error.message;
+            }
+        }
+
+        // Test 4: Check required form elements
+        async function test4() {
+            const result = document.getElementById('test4-result');
+            try {
+                const response = await fetch('event-detail.html');
+                const html = await response.text();
+                
+                const checks = [
+                    { name: 'Name input (readonly)', pattern: /id="reg-name".*readonly/ },
+                    { name: 'Email input (readonly)', pattern: /id="reg-email".*readonly/ },
+                    { name: 'Organization input', pattern: /id="reg-organization"/ },
+                    { name: 'Notes textarea', pattern: /id="reg-notes"/ },
+                    { name: 'Submit button', pattern: /type="submit"/ },
+                    { name: 'Login button', pattern: /id="show-login"/ },
+                    { name: 'Register button', pattern: /id="show-register"/ }
+                ];
+                
+                const results = checks.map(check => ({
+                    name: check.name,
+                    passed: check.pattern.test(html)
+                }));
+                
+                const allPassed = results.every(r => r.passed);
+                
+                if (allPassed) {
+                    result.className = 'test-result test-pass';
+                    result.innerHTML = '<i class="fas fa-check-circle"></i> PASS: All required form elements present';
+                } else {
+                    result.className = 'test-result test-fail';
+                    const failed = results.filter(r => !r.passed).map(r => r.name).join(', ');
+                    result.innerHTML = '<i class="fas fa-times-circle"></i> FAIL: Missing elements: ' + failed;
+                }
+            } catch (error) {
+                result.className = 'test-result test-fail';
+                result.innerHTML = '<i class="fas fa-times-circle"></i> FAIL: ' + error.message;
+            }
+        }
+
+        // Run all tests
+        async function runTests() {
+            await test1();
+            await test2();
+            await test3();
+            await test4();
+        }
+
+        runTests();
+    </script>
+</body>
+</html>

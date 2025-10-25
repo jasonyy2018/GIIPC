@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>闪烁修复验证</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1B4D89;
+            border-bottom: 3px solid #FF8C42;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #1B4D89;
+            margin-top: 0;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        ul {
+            line-height: 1.8;
+        }
+        .test-link {
+            display: inline-block;
+            background: #1B4D89;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 10px 10px 10px 0;
+        }
+        .test-link:hover {
+            background: #FF8C42;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎉 前端闪烁问题修复验证</h1>
+
+    <div class="section">
+        <h2>问题诊断</h2>
+        <div class="status warning">
+            <strong>发现的问题：</strong>
+            <ul>
+                <li>HTML 中包含静态的示例卡片内容</li>
+                <li>JavaScript 加载后会替换整个容器的 innerHTML</li>
+                <li>这导致页面加载时先显示静态内容，然后被 API 数据替换</li>
+                <li>替换过程造成了明显的闪烁效果</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>修复方案</h2>
+        <div class="status success">
+            <strong>已实施的修复：</strong>
+            <ul>
+                <li>✅ 移除了 <code>.news-slider</code> 中的所有静态新闻卡片</li>
+                <li>✅ 移除了 <code>.conferences-slider</code> 中的所有静态会议卡片</li>
+                <li>✅ 添加了初始加载状态（loading spinner）</li>
+                <li>✅ 为 <code>#upcoming-events-grid</code> 也添加了加载状态</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>修改的文件</h2>
+        <div class="status info">
+            <strong>frontend/index.html</strong>
+            <ul>
+                <li>News Section: 替换了 3 个静态新闻卡片为加载状态</li>
+                <li>Past Conferences Section: 替换了 3 个静态会议卡片为加载状态</li>
+                <li>Upcoming Events Section: 添加了初始加载状态</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>预期效果</h2>
+        <div class="status success">
+            <strong>修复后的行为：</strong>
+            <ul>
+                <li>页面加载时显示统一的 loading spinner</li>
+                <li>JavaScript 加载完成后，直接显示 API 数据</li>
+                <li>不再有内容替换导致的闪烁</li>
+                <li>用户体验更加流畅和专业</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>验证步骤</h2>
+        <ol>
+            <li>清除浏览器缓存（Ctrl+Shift+Delete）</li>
+            <li>打开首页 <code>frontend/index.html</code></li>
+            <li>观察以下部分的加载过程：
+                <ul>
+                    <li>News Section</li>
+                    <li>Upcoming Events Section</li>
+                    <li>Past Conferences Section</li>
+                </ul>
+            </li>
+            <li>确认不再有内容闪烁或跳动</li>
+            <li>确认所有数据正确加载和显示</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>快速测试</h2>
+        <a href="frontend/index.html" class="test-link" target="_blank">打开首页测试</a>
+        <a href="frontend/index.html#news" class="test-link" target="_blank">测试 News 部分</a>
+        <a href="frontend/index.html#events" class="test-link" target="_blank">测试 Events 部分</a>
+        <a href="frontend/index.html#past-conferences" class="test-link" target="_blank">测试 Conferences 部分</a>
+    </div>
+
+    <div class="section">
+        <h2>技术细节</h2>
+        <div class="status info">
+            <strong>加载流程：</strong>
+            <ol>
+                <li>HTML 加载：显示 loading spinner</li>
+                <li>JavaScript 模块加载：
+                    <ul>
+                        <li><code>data-renderer.js</code> - 处理 News 和 Conferences</li>
+                        <li><code>upcoming-events.js</code> - 处理 Upcoming Events</li>
+                    </ul>
+                </li>
+                <li>API 请求：并行获取数据</li>
+                <li>DOM 更新：一次性替换 loading 状态为实际内容</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>注意事项</h2>
+        <div class="status warning">
+            <ul>
+                <li>确保后端 API 服务正在运行</li>
+                <li>检查浏览器控制台是否有错误</li>
+                <li>如果数据加载失败，会显示错误提示而不是空白</li>
+                <li>网络较慢时，loading 状态会显示更长时间</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 自动检测后端状态
+        fetch('http://localhost:3000/api/health')
+            .then(response => response.json())
+            .then(data => {
+                const section = document.createElement('div');
+                section.className = 'section';
+                section.innerHTML = `
+                    <h2>后端状态</h2>
+                    <div class="status success">
+                        <strong>✅ 后端服务运行正常</strong>
+                        <p>API 地址: http://localhost:3000</p>
+                    </div>
+                `;
+                document.body.appendChild(section);
+            })
+            .catch(error => {
+                const section = document.createElement('div');
+                section.className = 'section';
+                section.innerHTML = `
+                    <h2>后端状态</h2>
+                    <div class="status warning">
+                        <strong>⚠️ 无法连接到后端服务</strong>
+                        <p>请确保后端服务正在运行：</p>
+                        <code>cd backend && npm start</code>
+                    </div>
+                `;
+                document.body.appendChild(section);
+            });
+    </script>
+</body>
+</html>
